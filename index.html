@@ -65,7 +65,6 @@
       display: block;
     }
 
-    /* Updated breed grid for square images */
     .breed-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -91,10 +90,9 @@
       box-shadow: 0 0 18px #c9a135;
     }
     
-    /* SQUARE image placeholder */
     .breed-img-placeholder {
       width: 100%;
-      aspect-ratio: 1 / 1; /* This makes it perfectly square */
+      aspect-ratio: 1 / 1;
       background: #3a4530;
       border-radius: 16px;
       margin-bottom: 8px;
@@ -104,16 +102,16 @@
       color: #9b9e7e;
       font-size: 0.75rem;
       background-size: cover;
-      background-position: center;
+      background-position: center 35%; /* Default lowered position to show more dog */
       border: 1px dashed #7f8c5a;
       overflow: hidden;
     }
     
-    /* If you add actual <img> tags later, they'll fit perfectly */
     .breed-img-placeholder img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      object-position: center 35%; /* This moves the focal point lower to show more of the dog */
     }
     
     .breed-name {
@@ -149,7 +147,6 @@
       border-bottom: 4px solid #7a601e;
     }
 
-    /* Tapper GIF area */
     .tap-area {
       background: #292f22;
       border-radius: 50%;
@@ -281,6 +278,15 @@
       autoCollector: 0,
       prestigeMultiplier: 1,
       tapGifUrl: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcjR5eGJ0b2ZqZ3J3eGZzZ2J0b2ZqZ3J3eGZzZ2J0b2ZqZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/3o7aTskHEUdgCQbKvC/giphy.gif',
+      // 🎯 Your custom breed images with positioning
+      breedImages: {
+        'XL Bully': {
+          url: 'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-044808%7E3.png',
+          position: 'center 35%' /* Lower percentage = shows more of the dog (head/chest area) */
+        }
+        // Add more breeds with custom positioning:
+        // 'Husky': { url: 'husky.jpg', position: 'center 30%' },
+      },
       breedOptions: [
         'Staffordshire Bull Terrier',
         'American PitBull',
@@ -305,15 +311,23 @@
           <input class="input-field" id="nameInput" placeholder="Enter your dog's name" value="${state.playerName}" />
           <p style="color:#b9aa7a; font-weight:bold;">Pick your breed:</p>
           <div class="breed-grid" id="breedGrid">
-            ${state.breedOptions.map(breed => `
-              <div class="breed-card ${state.breed === breed ? 'selected' : ''}" data-breed="${breed}">
-                <!-- SQUARE placeholder - you can replace the text with an <img> tag -->
-                <div class="breed-img-placeholder" id="img-${breed.replace(/\s+/g,'')}">
-                  🖼️<br>add image
+            ${state.breedOptions.map(breed => {
+              const breedData = state.breedImages[breed];
+              const imgUrl = breedData?.url || '';
+              const imgPosition = breedData?.position || 'center 35%'; /* Default lowered position */
+              const imgStyle = imgUrl 
+                ? `background-image: url('${imgUrl}'); background-size: cover; background-position: ${imgPosition};` 
+                : '';
+              const imgContent = imgUrl ? '' : '🖼️<br>add image';
+              return `
+                <div class="breed-card ${state.breed === breed ? 'selected' : ''}" data-breed="${breed}">
+                  <div class="breed-img-placeholder" style="${imgStyle}">
+                    ${imgContent}
+                  </div>
+                  <div class="breed-name">${breed}</div>
                 </div>
-                <div class="breed-name">${breed}</div>
-              </div>
-            `).join('')}
+              `;
+            }).join('')}
           </div>
           <button class="start-btn" id="startGameBtn">⚔️ Enter Paws of Destiny</button>
         </div>
