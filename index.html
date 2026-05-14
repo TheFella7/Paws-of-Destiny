@@ -13,7 +13,7 @@
     }
 
     body {
-      background: linear-gradient(145deg, #1e2b1a 0%, #0f140d 100%);
+      background: #000000;
       min-height: 100vh;
       display: flex;
       justify-content: center;
@@ -24,41 +24,41 @@
     .game-container {
       max-width: 500px;
       width: 100%;
-      background: #1f231d;
+      background: #0a0a0a;
       border-radius: 38px;
-      box-shadow: 0 25px 45px rgba(0,0,0,0.8), 0 0 0 2px #5b6b44;
+      box-shadow: 0 25px 45px rgba(0,0,0,0.9), 0 0 0 2px #333333;
       overflow: hidden;
-      border: 1px solid #6f8252;
+      border: 1px solid #444444;
     }
 
     .game-header {
-      background: #232b1e;
+      background: #111111;
       padding: 14px 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 2px solid #7b8c4a;
+      border-bottom: 2px solid #333333;
     }
     .game-header h2 {
-      color: #f3e2b5;
+      color: #ffffff;
       font-weight: 800;
       letter-spacing: 2px;
       font-size: 1.4rem;
       text-shadow: 0 2px 4px black;
     }
     .resource-badge {
-      background: #0e100c;
+      background: #1a1a1a;
       padding: 6px 16px;
       border-radius: 30px;
-      color: #ddb65e;
+      color: #ffd700;
       font-weight: bold;
-      border: 1px solid #6a7942;
+      border: 1px solid #444444;
     }
 
     .screen {
       display: none;
       padding: 16px;
-      background: #1e221b;
+      background: #0a0a0a;
       min-height: 500px;
     }
     .screen.active {
@@ -72,38 +72,38 @@
       margin-top: 15px;
     }
     .breed-card {
-      background: #282f23;
+      background: #1a1a1a;
       border-radius: 24px;
       padding: 12px;
       text-align: center;
-      border: 2px solid #4b5a38;
+      border: 2px solid #333333;
       cursor: pointer;
       transition: all 0.2s;
-      color: #d4c098;
+      color: #cccccc;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
     .breed-card.selected {
-      border: 3px solid #e5b83c;
-      background: #353f2c;
-      box-shadow: 0 0 18px #c9a135;
+      border: 3px solid #ffd700;
+      background: #222222;
+      box-shadow: 0 0 18px #ffd700;
     }
     
     .breed-img-placeholder {
       width: 100%;
       aspect-ratio: 1 / 1;
-      background: #3a4530;
+      background: #222222;
       border-radius: 16px;
       margin-bottom: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #9b9e7e;
+      color: #888888;
       font-size: 0.75rem;
       background-size: cover;
-      background-position: center 35%; /* Default lowered position to show more dog */
-      border: 1px dashed #7f8c5a;
+      background-position: center 35%;
+      border: 1px dashed #555555;
       overflow: hidden;
     }
     
@@ -111,7 +111,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: center 35%; /* This moves the focal point lower to show more of the dog */
+      object-position: center 35%;
     }
     
     .breed-name {
@@ -119,89 +119,77 @@
       font-size: 0.8rem;
       text-transform: uppercase;
       margin-top: 4px;
+      color: #ffffff;
     }
 
     .input-field {
       width: 100%;
       padding: 14px;
       border-radius: 30px;
-      border: 2px solid #5b6b3a;
-      background: #0f120d;
-      color: #f0e0b0;
+      border: 2px solid #444444;
+      background: #1a1a1a;
+      color: #ffffff;
       font-weight: bold;
       margin: 12px 0;
       outline: none;
       font-size: 1rem;
     }
+    .input-field::placeholder {
+      color: #888888;
+    }
     .start-btn {
-      background: #c99b2c;
+      background: #ffd700;
       border: none;
       padding: 16px;
       width: 100%;
       border-radius: 40px;
       font-weight: bold;
       font-size: 1.2rem;
-      color: #1e1a0c;
+      color: #000000;
       margin-top: 10px;
       cursor: pointer;
-      border-bottom: 4px solid #7a601e;
+      border-bottom: 4px solid #cc9900;
     }
 
+    /* Clean tapper - no border, no animation, no counter text */
     .tap-area {
-      background: #292f22;
-      border-radius: 50%;
-      width: 160px;
-      height: 160px;
+      background: transparent;
+      width: 200px;
+      height: 200px;
       margin: 20px auto;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 3.8rem;
-      border: 4px solid #c9a443;
-      box-shadow: 0 0 30px #9b8122;
       cursor: pointer;
-      transition: transform 0.1s;
       user-select: none;
       overflow: hidden;
       position: relative;
-    }
-    .tap-area:active {
-      transform: scale(0.92);
-      background: #3f4a2e;
     }
     .tap-gif {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      border-radius: 50%;
-    }
-    @keyframes tapPop {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.2); }
-      100% { transform: scale(1); }
-    }
-    .tap-animation {
-      animation: tapPop 0.2s ease-out;
+      border-radius: 16px;
     }
 
     .stat-row {
       display: flex;
       justify-content: space-between;
-      color: #ddcca6;
+      color: #ffffff;
       font-weight: bold;
       margin: 8px 0;
     }
     .progress-bg {
-      background: #282e22;
+      background: #222222;
       height: 14px;
       border-radius: 10px;
       margin: 6px 0;
-      border: 1px solid #54633c;
+      border: 1px solid #444444;
     }
     .progress-fill {
       height: 100%;
       border-radius: 10px;
-      background: linear-gradient(90deg, #dfa534, #f5cb5c);
+      background: linear-gradient(90deg, #ffd700, #ffed4a);
     }
 
     .tab-row {
@@ -211,51 +199,61 @@
     }
     .tab {
       flex: 1;
-      background: #2b3222;
+      background: #1a1a1a;
       padding: 10px 4px;
       text-align: center;
       border-radius: 20px 20px 0 0;
       font-weight: bold;
-      color: #b8b085;
+      color: #888888;
       cursor: pointer;
-      border: 1px solid #4b5a38;
+      border: 1px solid #333333;
       border-bottom: none;
       font-size: 0.7rem;
     }
     .tab.active {
-      background: #1e221b;
-      color: #f7da7c;
-      border-bottom: 2px solid #e1a82b;
+      background: #0a0a0a;
+      color: #ffd700;
+      border-bottom: 2px solid #ffd700;
     }
 
     .upgrade-item {
-      background: #282f22;
+      background: #1a1a1a;
       border-radius: 20px;
       padding: 12px;
       margin: 10px 0;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border: 1px solid #4b5937;
+      border: 1px solid #333333;
+      color: #ffffff;
     }
     button {
-      background: #4b5e2e;
+      background: #333333;
       border: none;
-      color: white;
+      color: #ffffff;
       font-weight: bold;
       padding: 10px 16px;
       border-radius: 30px;
       cursor: pointer;
-      border-bottom: 3px solid #2d3b1a;
+      border-bottom: 3px solid #555555;
+    }
+    button:hover {
+      background: #444444;
     }
     .shop-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: #252c1f;
+      background: #1a1a1a;
       padding: 12px;
       border-radius: 18px;
       margin: 8px 0;
+      color: #ffffff;
+      border: 1px solid #333333;
+    }
+
+    h3, p {
+      color: #ffffff;
     }
   </style>
 </head>
@@ -277,15 +275,21 @@
       tapPower: 1,
       autoCollector: 0,
       prestigeMultiplier: 1,
-      tapGifUrl: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcjR5eGJ0b2ZqZ3J3eGZzZ2J0b2ZqZ3J3eGZzZ2J0b2ZqZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/3o7aTskHEUdgCQbKvC/giphy.gif',
-      // 🎯 Your custom breed images with positioning
+      currentTapImage: 0,
+      // Your 6 custom tapper images
+      tapImageCycle: [
+        'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-054556%7E2.png',
+        'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-054625%7E2.png',
+        'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-054630%7E2.png',
+        'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-054635%7E2.png',
+        'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-054642%7E2.png',
+        'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-054649%7E2.png'
+      ],
       breedImages: {
         'XL Bully': {
           url: 'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-044808%7E3.png',
-          position: 'center 35%' /* Lower percentage = shows more of the dog (head/chest area) */
+          position: 'center 35%'
         }
-        // Add more breeds with custom positioning:
-        // 'Husky': { url: 'husky.jpg', position: 'center 30%' },
       },
       breedOptions: [
         'Staffordshire Bull Terrier',
@@ -307,14 +311,14 @@
     function renderSetup() {
       let html = `
         <div class="screen active" id="setupScreen">
-          <h3 style="color:#e7cf8a; margin-bottom:10px;">🐾 Choose Your Destiny</h3>
+          <h3 style="color:#ffd700; margin-bottom:10px;">🐾 Choose Your Destiny</h3>
           <input class="input-field" id="nameInput" placeholder="Enter your dog's name" value="${state.playerName}" />
-          <p style="color:#b9aa7a; font-weight:bold;">Pick your breed:</p>
+          <p style="color:#cccccc; font-weight:bold;">Pick your breed:</p>
           <div class="breed-grid" id="breedGrid">
             ${state.breedOptions.map(breed => {
               const breedData = state.breedImages[breed];
               const imgUrl = breedData?.url || '';
-              const imgPosition = breedData?.position || 'center 35%'; /* Default lowered position */
+              const imgPosition = breedData?.position || 'center 35%';
               const imgStyle = imgUrl 
                 ? `background-image: url('${imgUrl}'); background-size: cover; background-position: ${imgPosition};` 
                 : '';
@@ -361,6 +365,7 @@
     }
 
     function renderMainGame() {
+      const currentImage = state.tapImageCycle[state.currentTapImage];
       let html = `
         <div class="game-header">
           <h2>🐕 ${state.playerName}</h2>
@@ -368,7 +373,7 @@
         </div>
         <div class="screen active" id="mainScreen">
           <div class="tap-area" id="tapDog">
-            <img src="${state.tapGifUrl}" alt="Tap Paw" class="tap-gif" id="tapGif" />
+            <img src="${currentImage}" alt="Tap Dog" class="tap-gif" id="tapGif" />
           </div>
           <div class="stat-row"><span>${state.breed}</span><span>⭐ Prestige ${state.prestigeCount}</span></div>
           <div class="stat-row"><span>Total Taps:</span><span id="totalTaps">${state.totalTaps}</span></div>
@@ -390,17 +395,23 @@
       startAutoCollector();
     }
 
+    function cycleToNextImage() {
+      state.currentTapImage = (state.currentTapImage + 1) % state.tapImageCycle.length;
+      
+      const gif = document.getElementById('tapGif');
+      if (gif) {
+        gif.src = state.tapImageCycle[state.currentTapImage];
+      }
+    }
+
     function handleTap() {
       let earned = state.tapPower * state.prestigeMultiplier;
       state.bones += earned;
       state.totalTaps++;
       updateBoneDisplay();
       
-      const gif = document.getElementById('tapGif');
-      if (gif) {
-        gif.classList.add('tap-animation');
-        setTimeout(() => gif.classList.remove('tap-animation'), 200);
-      }
+      // Cycle to next image
+      cycleToNextImage();
       
       if (state.tabActive === 'profile') renderProfileTab();
     }
@@ -444,13 +455,14 @@
       const container = document.getElementById('tabContent');
       if (!container) return;
       container.innerHTML = `
-        <div style="color:#e7cf8a; padding:10px;">
-          <h3>🐾 ${state.playerName}</h3>
+        <div style="color:#ffffff; padding:10px;">
+          <h3 style="color:#ffd700;">🐾 ${state.playerName}</h3>
           <p><strong>Breed:</strong> ${state.breed}</p>
           <p><strong>Level:</strong> ${state.upgradeLevel} | <strong>Prestige:</strong> ${state.prestigeCount}</p>
           <p>🦴 Bones: ${state.bones}</p>
           <p>👆 Total Taps: ${state.totalTaps}</p>
           <p>⚡ Tap Power: ${state.tapPower} | 🕒 Auto: ${state.autoCollector}/s</p>
+          <p>🖼️ Tap Images: ${state.tapImageCycle.length} in cycle</p>
         </div>
       `;
     }
@@ -467,7 +479,7 @@
           <span>🕒 Auto Collector +1/s</span>
           <button id="upgradeAutoBtn">Cost: 40 🦴</button>
         </div>
-        <p style="color:#b9aa7a; margin-top:10px;">Current tap: ${state.tapPower} | Auto: ${state.autoCollector}/s</p>
+        <p style="color:#cccccc; margin-top:10px;">Current tap: ${state.tapPower} | Auto: ${state.autoCollector}/s</p>
       `;
       document.getElementById('upgradeTapBtn').addEventListener('click', () => {
         const price = 25 * state.upgradeLevel;
@@ -492,8 +504,8 @@
     function renderPrestigeTab() {
       const container = document.getElementById('tabContent');
       container.innerHTML = `
-        <div style="color:#e7cf8a;">
-          <h3>🌟 Prestige System</h3>
+        <div style="color:#ffffff;">
+          <h3 style="color:#ffd700;">🌟 Prestige System</h3>
           <p>Reset taps & upgrades, but gain a permanent multiplier.</p>
           <p>Current multiplier: x${state.prestigeMultiplier}</p>
           <p>Requires 500 bones to prestige.</p>
@@ -527,7 +539,7 @@
           <span>⚡ 2x Tap boost (30s)</span>
           <button id="buyBoost">20 🦴</button>
         </div>
-        <p style="color:#b9aa7a;">(Shop placeholder – dog toys coming soon)</p>
+        <p style="color:#cccccc;">(Shop placeholder – dog toys coming soon)</p>
       `;
       document.getElementById('buyBones').addEventListener('click', () => {
         state.bones += 100;
