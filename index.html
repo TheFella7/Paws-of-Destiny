@@ -31,7 +31,6 @@
       border: none;
     }
 
-    /* Title banner image */
     .title-banner {
       width: 100%;
       padding: 8px 0;
@@ -80,7 +79,6 @@
       display: block;
     }
 
-    /* Centered setup screen */
     .setup-centered {
       display: flex;
       flex-direction: column;
@@ -132,19 +130,22 @@
       overflow: hidden;
     }
     
-    .breed-img-placeholder img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center 35%;
-    }
-    
     .breed-name {
       font-weight: bold;
       font-size: 0.8rem;
       text-transform: uppercase;
       margin-top: 4px;
       color: #ffffff;
+    }
+
+    .breed-stats {
+      font-size: 0.65rem;
+      color: #ffd700;
+      margin-top: 4px;
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      flex-wrap: wrap;
     }
 
     .input-field {
@@ -178,7 +179,6 @@
       border-bottom: 4px solid #cc9900;
     }
 
-    /* Clean tapper on pure black background */
     .tap-area {
       background: transparent;
       width: 200px;
@@ -209,12 +209,8 @@
       object-fit: cover;
       border-radius: 0;
       pointer-events: none;
-      -webkit-touch-callout: none;
-      -webkit-user-select: none;
-      user-select: none;
     }
 
-    /* Level and EXP bar */
     .level-container {
       margin: 0 auto 16px;
       max-width: 300px;
@@ -225,7 +221,6 @@
       font-weight: bold;
       font-size: 0.9rem;
       margin-bottom: 4px;
-      text-align: center;
     }
     .exp-bar-bg {
       background: #111111;
@@ -244,7 +239,6 @@
     .exp-text {
       color: #888888;
       font-size: 0.7rem;
-      text-align: center;
     }
 
     .stat-row {
@@ -254,17 +248,28 @@
       font-weight: bold;
       margin: 8px 0;
     }
-    .progress-bg {
-      background: #111111;
-      height: 14px;
-      border-radius: 10px;
-      margin: 6px 0;
-      border: 1px solid #333333;
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin: 8px 0;
     }
-    .progress-fill {
-      height: 100%;
+    .stat-box {
+      background: #0a0a0a;
       border-radius: 10px;
-      background: linear-gradient(90deg, #ffd700, #ffed4a);
+      padding: 8px;
+      text-align: center;
+      border: 1px solid #222222;
+    }
+    .stat-box .stat-label {
+      font-size: 0.7rem;
+      color: #888888;
+    }
+    .stat-box .stat-value {
+      font-size: 1rem;
+      font-weight: bold;
+      color: #ffd700;
     }
 
     .tab-row {
@@ -291,16 +296,38 @@
       border-bottom: 2px solid #ffd700;
     }
 
-    .upgrade-item {
+    .upgrade-item, .shop-item, .prestige-item {
       background: #0a0a0a;
       border-radius: 20px;
       padding: 12px;
       margin: 10px 0;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      flex-direction: column;
+      gap: 8px;
       border: 1px solid #222222;
       color: #ffffff;
+    }
+    .upgrade-info, .prestige-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .upgrade-buttons, .prestige-buttons {
+      display: flex;
+      gap: 8px;
+    }
+    .upgrade-buttons button, .prestige-buttons button {
+      flex: 1;
+      font-size: 0.75rem;
+      padding: 8px 10px;
+    }
+    .max-buy-btn {
+      background: #ffd700;
+      color: #000000;
+      border-bottom-color: #cc9900;
+    }
+    .max-buy-btn:hover {
+      background: #ffed4a;
     }
     button {
       background: #222222;
@@ -312,55 +339,128 @@
       cursor: pointer;
       border-bottom: 3px solid #444444;
     }
-    button:hover {
-      background: #333333;
-    }
-    .shop-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #0a0a0a;
-      padding: 12px;
-      border-radius: 18px;
-      margin: 8px 0;
-      color: #ffffff;
-      border: 1px solid #222222;
+    button:hover { background: #333333; }
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
 
-    h3, p {
-      color: #ffffff;
+    .save-slot {
+      background: #0a0a0a;
+      border-radius: 16px;
+      padding: 14px;
+      margin: 10px 0;
+      border: 1px solid #333333;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .save-slot:hover {
+      border-color: #ffd700;
+      background: #111111;
+    }
+    .save-slot h4 {
+      color: #ffd700;
+      margin-bottom: 4px;
+    }
+    .save-slot p {
+      color: #888888;
+      font-size: 0.8rem;
+    }
+    .logout-btn {
+      background: #8b0000;
+      border-bottom-color: #ff0000;
+      margin-top: 5px;
+    }
+    .logout-btn:hover { background: #a00000; }
+
+    h3, p { color: #ffffff; }
+    .next-cost {
+      font-size: 0.75rem;
+      color: #888888;
+    }
+    .cost-breakdown {
+      font-size: 0.7rem;
+      color: #ffd700;
+      margin-top: 4px;
     }
   </style>
 </head>
 <body>
-<div class="game-container" id="app">
-  <!-- dynamically filled -->
-</div>
+<div class="game-container" id="app"></div>
 
 <script>
   (function() {
+    // ============ NUMBER FORMATTING SYSTEM ============
+    
+    const suffixes = [
+      '', 'k', 'm', 'b', 't', 'aa', 'ab', 'ac', 'ad', 'ae', 'af', 'ag', 'ah', 'ai', 'aj', 'ak', 'al', 'am', 'an', 'ao', 'ap', 'aq', 'ar', 'as', 'at', 'au', 'av', 'aw', 'ax', 'ay', 'az',
+      'ba', 'bb', 'bc', 'bd', 'be', 'bf', 'bg', 'bh', 'bi', 'bj', 'bk', 'bl', 'bm', 'bn', 'bo', 'bp', 'bq', 'br', 'bs', 'bt', 'bu', 'bv', 'bw', 'bx', 'by', 'bz',
+      'ca', 'cb', 'cc', 'cd', 'ce', 'cf', 'cg', 'ch', 'ci', 'cj', 'ck', 'cl', 'cm', 'cn', 'co', 'cp', 'cq', 'cr', 'cs', 'ct', 'cu', 'cv', 'cw', 'cx', 'cy', 'cz'
+    ];
+    
+    function formatNum(num) {
+      if (num < 0) return '0';
+      if (num < 1000) return Math.floor(num).toString();
+      
+      let tier = 0;
+      let value = num;
+      
+      while (value >= 1000 && tier < suffixes.length - 1) {
+        value /= 1000;
+        tier++;
+      }
+      
+      if (tier >= suffixes.length) {
+        const extraTiers = tier - suffixes.length + 1;
+        const firstLetter = Math.floor(extraTiers / 26);
+        const secondLetter = extraTiers % 26;
+        const dynamicSuffix = String.fromCharCode(97 + firstLetter) + String.fromCharCode(97 + secondLetter);
+        return value.toFixed(2).replace(/\.?0+$/, '') + dynamicSuffix;
+      }
+      
+      return value.toFixed(2).replace(/\.?0+$/, '') + suffixes[tier];
+    }
+
+    // ============ BREED STATS GENERATOR ============
+    
+    function getBreedStats(breedName) {
+      let seed = 0;
+      for (let i = 0; i < breedName.length; i++) {
+        seed += breedName.charCodeAt(i);
+      }
+      
+      function seededRandom(s) {
+        const x = Math.sin(s * 9301 + 49297) * 233280;
+        return Math.abs(x - Math.floor(x));
+      }
+      
+      return {
+        health: Math.floor(seededRandom(seed) * 5) + 1,
+        strength: Math.floor(seededRandom(seed + 1) * 5) + 1,
+        attack: Math.floor(seededRandom(seed + 2) * 5) + 1,
+        defence: Math.floor(seededRandom(seed + 3) * 5) + 1
+      };
+    }
+
     const state = {
-      screen: 'setup',
+      screen: 'login',
+      currentProfileId: null,
       playerName: '',
       breed: '',
+      breedStats: null,
       bones: 0,
       totalTaps: 0,
-      prestigeCount: 0,
-      upgradeLevel: 1,
+      prestigeOwned: 0,
+      tapPowerOwned: 0,
+      autoCollectorOwned: 0,
       tapPower: 1,
       autoCollector: 0,
       prestigeMultiplier: 1,
       currentTapImage: 0,
-      
-      // Level system - visual only, no rewards
       level: 1,
       exp: 0,
       expToNextLevel: 100,
-      
-      // Game title banner image
       titleBannerUrl: 'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/file_000000006e3c7243adb2fa6d9b40ef21.png',
-      
-      // Default tapper images
       defaultTapImages: [
         'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-054556%7E2.png',
         'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-054625%7E2.png',
@@ -369,8 +469,6 @@
         'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-054642%7E2.png',
         'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-054649%7E2.png'
       ],
-      
-      // Breed-specific tapper images
       breedTapImages: {
         'Staffordshire Bull Terrier': [
           'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-062822%7E3.png',
@@ -381,7 +479,6 @@
           'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-063013%7E2.png'
         ]
       },
-      
       breedImages: {
         'Staffordshire Bull Terrier': {
           url: 'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-062136%7E2.png',
@@ -393,69 +490,342 @@
         }
       },
       breedOptions: [
-        'Staffordshire Bull Terrier',
-        'American PitBull',
-        'American Bulldog',
-        'XL Bully',
-        'Cane Corso',
-        'Japanese Akita',
-        'Doberman',
-        'Husky',
-        'Chihuahua',
-        'Jack Russell',
-        'Shih Tzu'
+        'Staffordshire Bull Terrier', 'American PitBull', 'American Bulldog',
+        'XL Bully', 'Cane Corso', 'Japanese Akita', 'Doberman',
+        'Husky', 'Chihuahua', 'Jack Russell', 'Shih Tzu'
       ]
     };
 
+    // ============ SAVE SYSTEM ============
+    
+    function getAllProfiles() {
+      const profiles = localStorage.getItem('pawsOfDestiny_profiles');
+      return profiles ? JSON.parse(profiles) : {};
+    }
+    
+    function saveProfiles(profiles) {
+      localStorage.setItem('pawsOfDestiny_profiles', JSON.stringify(profiles));
+    }
+    
+    function saveCurrentProfile() {
+      if (!state.currentProfileId) return;
+      const profiles = getAllProfiles();
+      profiles[state.currentProfileId] = {
+        playerName: state.playerName,
+        breed: state.breed,
+        breedStats: state.breedStats,
+        bones: state.bones,
+        totalTaps: state.totalTaps,
+        prestigeOwned: state.prestigeOwned,
+        tapPowerOwned: state.tapPowerOwned,
+        autoCollectorOwned: state.autoCollectorOwned,
+        tapPower: state.tapPower,
+        autoCollector: state.autoCollector,
+        prestigeMultiplier: state.prestigeMultiplier,
+        currentTapImage: state.currentTapImage,
+        level: state.level,
+        exp: state.exp,
+        expToNextLevel: state.expToNextLevel,
+        lastSaved: new Date().toISOString()
+      };
+      saveProfiles(profiles);
+    }
+    
+    function loadProfile(profileId) {
+      const profiles = getAllProfiles();
+      const profile = profiles[profileId];
+      if (profile) {
+        state.currentProfileId = profileId;
+        state.playerName = profile.playerName;
+        state.breed = profile.breed;
+        state.breedStats = profile.breedStats || getBreedStats(profile.breed);
+        state.bones = profile.bones;
+        state.totalTaps = profile.totalTaps;
+        state.prestigeOwned = profile.prestigeOwned || 0;
+        state.tapPowerOwned = profile.tapPowerOwned || 0;
+        state.autoCollectorOwned = profile.autoCollectorOwned || 0;
+        state.tapPower = profile.tapPower || 1;
+        state.autoCollector = profile.autoCollector || 0;
+        state.prestigeMultiplier = profile.prestigeMultiplier || 1;
+        state.currentTapImage = profile.currentTapImage;
+        state.level = profile.level;
+        state.exp = profile.exp;
+        state.expToNextLevel = profile.expToNextLevel;
+        return true;
+      }
+      return false;
+    }
+    
+    function logout() {
+      saveCurrentProfile();
+      state.currentProfileId = null;
+      state.screen = 'login';
+      renderLoginScreen();
+    }
+    
+    function deleteProfile(profileId) {
+      const profiles = getAllProfiles();
+      delete profiles[profileId];
+      saveProfiles(profiles);
+      renderLoginScreen();
+    }
+    
+    function downloadSaveFile() {
+      const saveData = {
+        profileId: state.currentProfileId,
+        playerName: state.playerName,
+        breed: state.breed,
+        breedStats: state.breedStats,
+        bones: state.bones,
+        prestigeOwned: state.prestigeOwned,
+        level: state.level,
+        exp: state.exp,
+        tapPower: state.tapPower,
+        tapPowerOwned: state.tapPowerOwned,
+        autoCollector: state.autoCollector,
+        autoCollectorOwned: state.autoCollectorOwned,
+        prestigeMultiplier: state.prestigeMultiplier,
+        timestamp: new Date().toISOString()
+      };
+      const blob = new Blob([JSON.stringify(saveData, null, 2)], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `paws_of_destiny_${state.playerName}_${new Date().toISOString().slice(0,10)}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    // ============ STAT CALCULATIONS ============
+    
+    function getEffectiveStats() {
+      if (!state.breedStats) return { health: 0, strength: 0, attack: 0, defence: 0 };
+      return {
+        health: state.breedStats.health + state.prestigeOwned,
+        strength: state.breedStats.strength + state.prestigeOwned,
+        attack: state.breedStats.attack + state.prestigeOwned,
+        defence: state.breedStats.defence + state.prestigeOwned
+      };
+    }
+
+    // ============ MULTIPLIER SYSTEM ============
+    
+    function getTotalMultiplier() {
+      return state.prestigeOwned + 1;
+    }
+
+    // ============ UPGRADE CALCULATIONS ============
+    
+    function getTapPowerCost() {
+      return 25 * (state.tapPowerOwned + 1);
+    }
+    
+    function getAutoCollectorCost() {
+      return 40 + (15 * state.autoCollectorOwned);
+    }
+    
+    function getPrestigeCost(ownedCount) {
+      return 500 * Math.pow(2, ownedCount);
+    }
+    
+    function getNextPrestigeCost() {
+      return 500 * Math.pow(2, state.prestigeOwned);
+    }
+    
+    function calculateMaxTapUpgrades() {
+      let affordable = 0;
+      let totalCost = 0;
+      let remainingBones = state.bones;
+      let currentOwned = state.tapPowerOwned;
+      
+      while (true) {
+        const cost = 25 * (currentOwned + 1);
+        if (remainingBones >= cost) {
+          remainingBones -= cost;
+          totalCost += cost;
+          affordable++;
+          currentOwned++;
+        } else {
+          break;
+        }
+      }
+      
+      return { count: affordable, totalCost: totalCost };
+    }
+    
+    function calculateMaxAutoUpgrades() {
+      let affordable = 0;
+      let totalCost = 0;
+      let remainingBones = state.bones;
+      let currentOwned = state.autoCollectorOwned;
+      
+      while (true) {
+        const cost = 40 + (15 * currentOwned);
+        if (remainingBones >= cost) {
+          remainingBones -= cost;
+          totalCost += cost;
+          affordable++;
+          currentOwned++;
+        } else {
+          break;
+        }
+      }
+      
+      return { count: affordable, totalCost: totalCost };
+    }
+    
+    function calculateMaxPrestiges() {
+      let affordable = 0;
+      let totalCost = 0;
+      let remainingBones = state.bones;
+      let currentOwned = state.prestigeOwned;
+      
+      while (true) {
+        const cost = getPrestigeCost(currentOwned);
+        if (remainingBones >= cost) {
+          remainingBones -= cost;
+          totalCost += cost;
+          affordable++;
+          currentOwned++;
+        } else {
+          break;
+        }
+      }
+      
+      return { count: affordable, totalCost: totalCost };
+    }
+    
+    function performPrestige() {
+      state.prestigeOwned++;
+      state.tapPowerOwned = 0;
+      state.autoCollectorOwned = 0;
+      state.tapPower = 1;
+      state.autoCollector = 0;
+      state.totalTaps = 0;
+      state.level = 1;
+      state.exp = 0;
+      state.expToNextLevel = getExpForLevel(1);
+    }
+    
+    // ============ HELPER FUNCTIONS ============
+    
     function getTapImages() {
       return state.breedTapImages[state.breed] || state.defaultTapImages;
     }
-
-    // Calculate EXP needed for next level (increases with each level)
+    
     function getExpForLevel(level) {
       return Math.floor(100 * Math.pow(1.5, level - 1));
     }
-
-    // Add EXP and check for level up (no rewards, no notification)
+    
     function addExp(amount) {
-      state.exp += amount;
-      
+      const multipliedAmount = amount * getTotalMultiplier();
+      state.exp += multipliedAmount;
       while (state.exp >= state.expToNextLevel) {
         state.exp -= state.expToNextLevel;
         state.level++;
         state.expToNextLevel = getExpForLevel(state.level);
-        // No rewards, no notification - just pure level progression
       }
-      
       updateExpBar();
     }
-
+    
     function updateExpBar() {
       const expFill = document.getElementById('expFill');
       const expText = document.getElementById('expText');
       const levelDisplay = document.getElementById('levelDisplay');
-      
-      if (expFill) {
-        const percentage = (state.exp / state.expToNextLevel) * 100;
-        expFill.style.width = percentage + '%';
-      }
-      if (expText) {
-        expText.textContent = `${state.exp} / ${state.expToNextLevel} EXP`;
-      }
-      if (levelDisplay) {
-        levelDisplay.textContent = `⭐ Level ${state.level}`;
-      }
+      if (expFill) expFill.style.width = (state.exp / state.expToNextLevel * 100) + '%';
+      if (expText) expText.textContent = `${formatNum(state.exp)} / ${formatNum(state.expToNextLevel)} EXP`;
+      if (levelDisplay) levelDisplay.textContent = `⭐ Level ${formatNum(state.level)}`;
     }
 
-    const appDiv = document.getElementById('app');
-
-    function renderSetup() {
+    // ============ RENDER SCREENS ============
+    
+    function renderLoginScreen() {
+      const profiles = getAllProfiles();
+      const profileIds = Object.keys(profiles);
+      
       let html = `
-        <!-- Title Banner - always visible -->
         <div class="title-banner">
           <img src="${state.titleBannerUrl}" alt="Paws of Destiny" />
         </div>
-        
+        <div class="screen active setup-centered" id="loginScreen">
+          <h3 style="color:#ffd700; margin-bottom:15px;">🐾 Paws of Destiny</h3>
+          <p style="color:#cccccc; margin-bottom:20px;">Welcome back! Select your profile or create a new one.</p>
+      `;
+      
+      if (profileIds.length > 0) {
+        html += `<div style="width:100%; max-width:400px;">`;
+        profileIds.forEach(id => {
+          const profile = profiles[id];
+          html += `
+            <div class="save-slot" data-profile="${id}">
+              <h4>🐕 ${profile.playerName}</h4>
+              <p>${profile.breed} | Level ${formatNum(profile.level)} | 🦴 ${formatNum(profile.bones)}</p>
+              <p style="font-size:0.7rem;">Last played: ${new Date(profile.lastSaved).toLocaleDateString()}</p>
+              <button class="delete-profile-btn" data-profile="${id}" style="background:#440000; margin-top:6px; font-size:0.7rem;">🗑️ Delete</button>
+            </div>
+          `;
+        });
+        html += `</div>`;
+      } else {
+        html += `<p style="color:#888888; margin:20px 0;">No profiles found. Create your first one!</p>`;
+      }
+      
+      html += `
+          <button class="start-btn" id="newProfileBtn" style="margin-top:20px;">✨ New Profile</button>
+        </div>
+      `;
+      
+      appDiv.innerHTML = html;
+      
+      document.querySelectorAll('.save-slot').forEach(slot => {
+        slot.addEventListener('click', (e) => {
+          if (e.target.classList.contains('delete-profile-btn')) return;
+          const profileId = slot.dataset.profile;
+          if (loadProfile(profileId)) {
+            state.screen = 'main';
+            renderMainGame();
+          }
+        });
+      });
+      
+      document.querySelectorAll('.delete-profile-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (confirm('Delete this profile? This cannot be undone!')) {
+            deleteProfile(btn.dataset.profile);
+          }
+        });
+      });
+      
+      document.getElementById('newProfileBtn').addEventListener('click', () => {
+        state.screen = 'setup';
+        state.currentProfileId = 'profile_' + Date.now();
+        state.playerName = '';
+        state.breed = '';
+        state.breedStats = null;
+        state.bones = 0;
+        state.totalTaps = 0;
+        state.prestigeOwned = 0;
+        state.tapPowerOwned = 0;
+        state.autoCollectorOwned = 0;
+        state.tapPower = 1;
+        state.autoCollector = 0;
+        state.prestigeMultiplier = 1;
+        state.currentTapImage = 0;
+        state.level = 1;
+        state.exp = 0;
+        state.expToNextLevel = getExpForLevel(1);
+        renderSetup();
+      });
+    }
+    
+    function renderSetup() {
+      let html = `
+        <div class="title-banner">
+          <img src="${state.titleBannerUrl}" alt="Paws of Destiny" />
+        </div>
         <div class="screen active setup-centered" id="setupScreen">
           <h3 style="color:#ffd700; margin-bottom:10px;">🐾 Choose Your Destiny</h3>
           <input class="input-field" id="nameInput" placeholder="Enter your dog's name" value="${state.playerName}" />
@@ -465,85 +835,74 @@
               const breedData = state.breedImages[breed];
               const imgUrl = breedData?.url || '';
               const imgPosition = breedData?.position || 'center 35%';
-              const imgStyle = imgUrl 
-                ? `background-image: url('${imgUrl}'); background-size: cover; background-position: ${imgPosition};` 
-                : '';
+              const imgStyle = imgUrl ? `background-image: url('${imgUrl}'); background-size: cover; background-position: ${imgPosition};` : '';
               const imgContent = imgUrl ? '' : '🖼️<br>add image';
+              const stats = getBreedStats(breed);
               return `
                 <div class="breed-card ${state.breed === breed ? 'selected' : ''}" data-breed="${breed}">
-                  <div class="breed-img-placeholder" style="${imgStyle}">
-                    ${imgContent}
-                  </div>
+                  <div class="breed-img-placeholder" style="${imgStyle}">${imgContent}</div>
                   <div class="breed-name">${breed}</div>
+                  <div class="breed-stats">
+                    <span>❤️${stats.health}</span>
+                    <span>💪${stats.strength}</span>
+                    <span>⚔️${stats.attack}</span>
+                    <span>🛡️${stats.defence}</span>
+                  </div>
                 </div>
               `;
             }).join('')}
           </div>
           <button class="start-btn" id="startGameBtn">⚔️ Enter Paws of Destiny</button>
+          <button class="logout-btn" id="backToLoginBtn" style="margin-top:8px;">↩️ Back to Profiles</button>
         </div>
       `;
       appDiv.innerHTML = html;
-      attachSetupEvents();
-    }
-
-    function attachSetupEvents() {
-      document.getElementById('nameInput').addEventListener('input', (e) => {
-        state.playerName = e.target.value;
-      });
+      
+      document.getElementById('nameInput').addEventListener('input', (e) => { state.playerName = e.target.value; });
       document.querySelectorAll('.breed-card').forEach(card => {
         card.addEventListener('click', () => {
           state.breed = card.dataset.breed;
+          state.breedStats = getBreedStats(state.breed);
           renderSetup();
         });
       });
       document.getElementById('startGameBtn').addEventListener('click', () => {
-        if (!state.playerName.trim()) {
-          alert('Please enter a name for your dog!');
-          return;
-        }
-        if (!state.breed) {
-          alert('Please select a breed!');
-          return;
-        }
+        if (!state.playerName.trim()) { alert('Please enter a name!'); return; }
+        if (!state.breed) { alert('Please select a breed!'); return; }
         state.screen = 'main';
-        state.currentTapImage = 0;
-        state.level = 1;
-        state.exp = 0;
-        state.expToNextLevel = getExpForLevel(1);
+        saveCurrentProfile();
         renderMainGame();
       });
+      document.getElementById('backToLoginBtn').addEventListener('click', () => {
+        state.screen = 'login';
+        renderLoginScreen();
+      });
     }
-
+    
     function renderMainGame() {
       const tapImages = getTapImages();
       const currentImage = tapImages[state.currentTapImage];
+      const totalMult = getTotalMultiplier();
       let html = `
-        <!-- Title Banner - always visible -->
         <div class="title-banner">
           <img src="${state.titleBannerUrl}" alt="Paws of Destiny" />
         </div>
-        
         <div class="game-header">
           <h2>🐕 ${state.playerName}</h2>
-          <div class="resource-badge">🦴 <span id="boneDisplay">${state.bones}</span></div>
+          <div class="resource-badge">🦴 <span id="boneDisplay">${formatNum(state.bones)}</span></div>
         </div>
         <div class="screen active" id="mainScreen">
           <div class="tap-area" id="tapDog">
             <img src="${currentImage}" alt="Tap Dog" class="tap-gif" id="tapGif" />
           </div>
-          
-          <!-- Level and EXP Bar -->
           <div class="level-container">
-            <div class="level-display" id="levelDisplay">⭐ Level ${state.level}</div>
+            <div class="level-display" id="levelDisplay">⭐ Level ${formatNum(state.level)}</div>
             <div class="exp-bar-bg">
               <div class="exp-bar-fill" id="expFill" style="width: ${(state.exp / state.expToNextLevel) * 100}%;"></div>
             </div>
-            <div class="exp-text" id="expText">${state.exp} / ${state.expToNextLevel} EXP</div>
+            <div class="exp-text" id="expText">${formatNum(state.exp)} / ${formatNum(state.expToNextLevel)} EXP (x${totalMult})</div>
           </div>
-          
-          <div class="stat-row"><span>${state.breed}</span><span>⭐ Prestige ${state.prestigeCount}</span></div>
-          <div class="progress-bg"><div class="progress-fill" id="xpBar" style="width:${Math.min(100, (state.bones%100))}%;"></div></div>
-
+          <div class="stat-row"><span>${state.breed}</span><span>⭐ Prestige ${formatNum(state.prestigeOwned)}</span></div>
           <div class="tab-row">
             <div class="tab active" data-tab="profile">🐶 Profile</div>
             <div class="tab" data-tab="upgrades">📈 Upgrades</div>
@@ -559,49 +918,55 @@
       renderProfileTab();
       startAutoCollector();
     }
-
-    function cycleToNextImage() {
-      const tapImages = getTapImages();
-      state.currentTapImage = (state.currentTapImage + 1) % tapImages.length;
-      
-      const gif = document.getElementById('tapGif');
-      if (gif) {
-        gif.src = tapImages[state.currentTapImage];
-      }
-    }
-
+    
     function handleTap() {
-      let earned = state.tapPower * state.prestigeMultiplier;
-      state.bones += earned;
+      const totalMult = getTotalMultiplier();
+      state.bones += state.tapPower * totalMult;
       state.totalTaps++;
-      
-      // Add EXP based on tap power
       addExp(state.tapPower);
-      
       updateBoneDisplay();
       cycleToNextImage();
       
-      if (state.tabActive === 'profile') renderProfileTab();
+      if (state.tabActive === 'upgrades') {
+        renderUpgradesTab();
+      } else if (state.tabActive === 'profile') {
+        renderProfileTab();
+      } else if (state.tabActive === 'prestige') {
+        renderPrestigeTab();
+      }
     }
-
+    
+    function cycleToNextImage() {
+      const tapImages = getTapImages();
+      state.currentTapImage = (state.currentTapImage + 1) % tapImages.length;
+      const gif = document.getElementById('tapGif');
+      if (gif) gif.src = tapImages[state.currentTapImage];
+    }
+    
     function updateBoneDisplay() {
       const bd = document.getElementById('boneDisplay');
-      if (bd) bd.textContent = state.bones;
+      if (bd) bd.textContent = formatNum(state.bones);
     }
-
+    
     let autoInterval;
     function startAutoCollector() {
       if (autoInterval) clearInterval(autoInterval);
       autoInterval = setInterval(() => {
         if (state.autoCollector > 0) {
-          state.bones += state.autoCollector * state.prestigeMultiplier;
-          // Auto collector also gives EXP
+          const totalMult = getTotalMultiplier();
+          state.bones += state.autoCollector * totalMult;
           addExp(state.autoCollector);
           updateBoneDisplay();
+          
+          if (state.tabActive === 'upgrades') {
+            renderUpgradesTab();
+          } else if (state.tabActive === 'prestige') {
+            renderPrestigeTab();
+          }
         }
       }, 1000);
     }
-
+    
     state.tabActive = 'profile';
     function attachTabEvents() {
       document.querySelectorAll('.tab').forEach(tab => {
@@ -618,87 +983,181 @@
         });
       });
     }
-
+    
     function renderProfileTab() {
       const container = document.getElementById('tabContent');
       if (!container) return;
+      
+      const stats = getEffectiveStats();
+      const totalMult = getTotalMultiplier();
+      
       container.innerHTML = `
         <div style="color:#ffffff; padding:10px;">
           <h3 style="color:#ffd700;">🐾 ${state.playerName}</h3>
           <p><strong>Breed:</strong> ${state.breed}</p>
-          <p><strong>Level:</strong> ${state.level} | <strong>Prestige:</strong> ${state.prestigeCount}</p>
-          <p>⭐ EXP: ${state.exp} / ${state.expToNextLevel}</p>
-          <p>🦴 Bones: ${state.bones}</p>
-          <p>⚡ Tap Power: ${state.tapPower} | 🕒 Auto: ${state.autoCollector}/s</p>
+          
+          <div class="stats-grid">
+            <div class="stat-box">
+              <div class="stat-label">❤️ Health</div>
+              <div class="stat-value">${stats.health}</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">💪 Strength</div>
+              <div class="stat-value">${stats.strength}</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">⚔️ Attack</div>
+              <div class="stat-value">${stats.attack}</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">🛡️ Defence</div>
+              <div class="stat-value">${stats.defence}</div>
+            </div>
+          </div>
+          
+          <p><strong>Level:</strong> ${formatNum(state.level)} | <strong>Prestige:</strong> ${formatNum(state.prestigeOwned)}</p>
+          <p>⭐ EXP: ${formatNum(state.exp)} / ${formatNum(state.expToNextLevel)}</p>
+          <p>🦴 Bones: ${formatNum(state.bones)}</p>
+          <p>⚡ Tap Power: ${formatNum(state.tapPower)} (owned: ${formatNum(state.tapPowerOwned)}) | 🕒 Auto: ${formatNum(state.autoCollector)}/s (owned: ${formatNum(state.autoCollectorOwned)})</p>
+          <p>🌟 Prestige Multiplier: x${totalMult}</p>
+          <p style="color:#ffd700; font-size:0.8rem;">Each prestige gives +1x earnings & XP boost!</p>
+          <button id="downloadSaveBtn" style="margin-top:10px; width:100%;">💾 Download Save File (.txt)</button>
+          <button id="logoutBtn" class="logout-btn" style="margin-top:8px; width:100%;">🚪 Logout (Save & Exit)</button>
+          <p style="color:#888888; font-size:0.7rem; margin-top:5px;">Save manually before leaving</p>
         </div>
       `;
+      document.getElementById('downloadSaveBtn').addEventListener('click', downloadSaveFile);
+      document.getElementById('logoutBtn').addEventListener('click', logout);
     }
-
+    
     function renderUpgradesTab() {
-      const cost = 25 * state.upgradeLevel;
       const container = document.getElementById('tabContent');
+      if (!container) return;
+      
+      const tapCost = getTapPowerCost();
+      const autoCost = getAutoCollectorCost();
+      const maxTap = calculateMaxTapUpgrades();
+      const maxAuto = calculateMaxAutoUpgrades();
+      
       container.innerHTML = `
         <div class="upgrade-item">
-          <span>💪 Tap Power +1</span>
-          <button id="upgradeTapBtn">Cost: ${cost} 🦴</button>
+          <div class="upgrade-info">
+            <span>💪 Tap Power +1</span>
+            <span>Cost: ${formatNum(tapCost)} 🦴</span>
+          </div>
+          <p class="next-cost">Owned: ${formatNum(state.tapPowerOwned)} | Max buy: ${maxTap.count} (${formatNum(maxTap.totalCost)} 🦴)</p>
+          <div class="upgrade-buttons">
+            <button id="upgradeTapBtn">Buy 1</button>
+            <button id="maxTapBtn" class="max-buy-btn">Max (${maxTap.count})</button>
+          </div>
         </div>
+        
         <div class="upgrade-item">
-          <span>🕒 Auto Collector +1/s</span>
-          <button id="upgradeAutoBtn">Cost: 40 🦴</button>
+          <div class="upgrade-info">
+            <span>🕒 Auto Collector +1/s</span>
+            <span>Cost: ${formatNum(autoCost)} 🦴</span>
+          </div>
+          <p class="next-cost">Owned: ${formatNum(state.autoCollectorOwned)} | Max buy: ${maxAuto.count} (${formatNum(maxAuto.totalCost)} 🦴)</p>
+          <div class="upgrade-buttons">
+            <button id="upgradeAutoBtn">Buy 1</button>
+            <button id="maxAutoBtn" class="max-buy-btn">Max (${maxAuto.count})</button>
+          </div>
         </div>
-        <p style="color:#cccccc; margin-top:10px;">Current tap: ${state.tapPower} | Auto: ${state.autoCollector}/s</p>
+        
+        <p style="color:#cccccc; margin-top:10px;">Current tap: ${formatNum(state.tapPower)} | Auto: ${formatNum(state.autoCollector)}/s | 🦴 ${formatNum(state.bones)} bones</p>
       `;
+      
       document.getElementById('upgradeTapBtn').addEventListener('click', () => {
-        const price = 25 * state.upgradeLevel;
+        const price = getTapPowerCost();
         if (state.bones >= price) {
           state.bones -= price;
+          state.tapPowerOwned++;
           state.tapPower++;
-          state.upgradeLevel++;
           updateBoneDisplay();
           renderUpgradesTab();
         } else alert('Not enough bones!');
       });
+      
+      document.getElementById('maxTapBtn').addEventListener('click', () => {
+        const max = calculateMaxTapUpgrades();
+        if (max.count > 0) {
+          state.bones -= max.totalCost;
+          state.tapPowerOwned += max.count;
+          state.tapPower += max.count;
+          updateBoneDisplay();
+          renderUpgradesTab();
+        } else alert('Not enough bones for any upgrade!');
+      });
+      
       document.getElementById('upgradeAutoBtn').addEventListener('click', () => {
-        if (state.bones >= 40) {
-          state.bones -= 40;
+        const price = getAutoCollectorCost();
+        if (state.bones >= price) {
+          state.bones -= price;
+          state.autoCollectorOwned++;
           state.autoCollector++;
           updateBoneDisplay();
           renderUpgradesTab();
-        } else alert('Need 40 bones.');
+        } else alert('Not enough bones!');
+      });
+      
+      document.getElementById('maxAutoBtn').addEventListener('click', () => {
+        const max = calculateMaxAutoUpgrades();
+        if (max.count > 0) {
+          state.bones -= max.totalCost;
+          state.autoCollectorOwned += max.count;
+          state.autoCollector += max.count;
+          updateBoneDisplay();
+          renderUpgradesTab();
+        } else alert('Not enough bones for any upgrade!');
       });
     }
-
+    
     function renderPrestigeTab() {
       const container = document.getElementById('tabContent');
+      if (!container) return;
+      
+      const nextCost = getNextPrestigeCost();
+      const maxPrestige = calculateMaxPrestiges();
+      const costAfterMax = maxPrestige.count > 0 ? getPrestigeCost(state.prestigeOwned + maxPrestige.count) : nextCost;
+      const totalMult = getTotalMultiplier();
+      const multAfterMax = totalMult + maxPrestige.count;
+      
       container.innerHTML = `
-        <div style="color:#ffffff;">
-          <h3 style="color:#ffd700;">🌟 Prestige System</h3>
-          <p>Reset taps & upgrades, but gain a permanent multiplier.</p>
-          <p>Current multiplier: x${state.prestigeMultiplier}</p>
-          <p>Requires 500 bones to prestige.</p>
-          <button id="prestigeBtn">🌟 Prestige Now (500 🦴)</button>
+        <div class="prestige-item">
+          <div class="prestige-info">
+            <span>🌟 Prestige (Reset progress)</span>
+            <span>Next Cost: ${formatNum(nextCost)} 🦴</span>
+          </div>
+          <p class="next-cost">Owned: ${formatNum(state.prestigeOwned)} | Max buy: ${maxPrestige.count} (${formatNum(maxPrestige.totalCost)} 🦴)</p>
+          <p class="next-cost">Current multiplier: x${totalMult} (earnings & XP)</p>
+          ${maxPrestige.count > 0 ? `<p class="cost-breakdown">After max buy: Owned ${formatNum(state.prestigeOwned + maxPrestige.count)} | Multiplier: x${multAfterMax} | Next cost: ${formatNum(costAfterMax)} 🦴 | Stats +${maxPrestige.count}</p>` : ''}
+          <div class="prestige-buttons">
+            <button id="maxPrestigeBtn" class="max-buy-btn" ${maxPrestige.count === 0 ? 'disabled' : ''}>Max (${maxPrestige.count})</button>
+          </div>
+          ${maxPrestige.count === 0 ? '<p style="color:#ff4444; font-size:0.8rem; margin-top:5px;">Not enough bones! Need ' + formatNum(nextCost - state.bones) + ' more 🦴</p>' : ''}
         </div>
+        
+        <p style="color:#cccccc; margin-top:10px;">Prestige resets: Level, Bones, Tap Power, Auto Collector.</p>
+        <p style="color:#ffd700; font-size:0.8rem;">Each prestige gives: +1x earnings multiplier, +1x XP boost, +1 to all breed stats!</p>
       `;
-      document.getElementById('prestigeBtn').addEventListener('click', () => {
-        if (state.bones >= 500) {
-          state.prestigeCount++;
-          state.prestigeMultiplier++;
-          state.bones = 0;
-          state.tapPower = 1;
-          state.autoCollector = 0;
-          state.upgradeLevel = 1;
-          state.totalTaps = 0;
-          state.level = 1;
-          state.exp = 0;
-          state.expToNextLevel = getExpForLevel(1);
+      
+      document.getElementById('maxPrestigeBtn').addEventListener('click', () => {
+        const max = calculateMaxPrestiges();
+        if (max.count > 0) {
+          state.bones -= max.totalCost;
+          for (let i = 0; i < max.count; i++) {
+            performPrestige();
+          }
           updateBoneDisplay();
           updateExpBar();
+          saveCurrentProfile();
           renderPrestigeTab();
-          alert('Prestige achieved! Multiplier increased.');
-        } else alert('You need 500 bones.');
+          const newMult = getTotalMultiplier();
+          alert(`Max prestige complete! Did ${max.count} prestiges. Multiplier now x${newMult}. Stats +${max.count}!`);
+        }
       });
     }
-
+    
     function renderShopTab() {
       const container = document.getElementById('tabContent');
       container.innerHTML = `
@@ -728,7 +1187,10 @@
       });
     }
 
-    renderSetup();
+    const appDiv = document.getElementById('app');
+    
+    // Start the app
+    renderLoginScreen();
   })();
 </script>
 </body>
