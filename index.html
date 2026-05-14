@@ -211,22 +211,10 @@
       -webkit-user-select: none;
       outline: none;
     }
-    .tap-area.akita-tapper, .tap-area.chihuahua-tapper {
-      width: 220px;
-      height: 220px;
-    }
+    .tap-area.akita-tapper, .tap-area.chihuahua-tapper { width: 220px; height: 220px; }
     .tap-area:active, .tap-area:focus, .tap-area:focus-visible { outline: none; background: transparent; -webkit-tap-highlight-color: transparent; }
-    .tap-gif {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 0;
-      pointer-events: none;
-    }
-    .tap-gif.akita-gif, .tap-gif.chihuahua-gif {
-      object-fit: contain;
-      padding: 10px;
-    }
+    .tap-gif { width: 100%; height: 100%; object-fit: cover; border-radius: 0; pointer-events: none; }
+    .tap-gif.akita-gif, .tap-gif.chihuahua-gif { object-fit: contain; padding: 10px; }
 
     .level-container { margin: 0 auto 10px; max-width: 300px; text-align: center; }
     .level-display { color: #ffd700; font-weight: bold; font-size: 0.9rem; margin-bottom: 4px; }
@@ -234,13 +222,7 @@
     .exp-bar-fill { height: 100%; border-radius: 6px; background: linear-gradient(90deg, #ffd700, #ffaa00); transition: width 0.3s ease; }
     .exp-text { color: #888888; font-size: 0.7rem; }
 
-    .prestige-under-tapper {
-      text-align: center;
-      margin: 4px 0 8px;
-      color: #ffd700;
-      font-weight: bold;
-      font-size: 0.85rem;
-    }
+    .prestige-under-tapper { text-align: center; margin: 4px 0 8px; color: #ffd700; font-weight: bold; font-size: 0.85rem; }
 
     .stat-row { display: flex; justify-content: space-between; color: #ffffff; font-weight: bold; margin: 8px 0; }
     .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 8px 0; }
@@ -248,8 +230,9 @@
     .stat-box .stat-label { font-size: 0.7rem; color: #888888; }
     .stat-box .stat-value { font-size: 1rem; font-weight: bold; color: #ffd700; }
 
-    .tab-row { display: flex; gap: 6px; margin-top: 14px; }
-    .tab { flex: 1; background: #0a0a0a; padding: 10px 4px; text-align: center; border-radius: 20px 20px 0 0; font-weight: bold; color: #888888; cursor: pointer; border: 1px solid #222222; border-bottom: none; font-size: 0.7rem; }
+    /* Wider tab row for more tabs */
+    .tab-row { display: flex; gap: 4px; margin-top: 14px; flex-wrap: wrap; }
+    .tab { flex: 1; min-width: 50px; background: #0a0a0a; padding: 10px 4px; text-align: center; border-radius: 20px 20px 0 0; font-weight: bold; color: #888888; cursor: pointer; border: 1px solid #222222; border-bottom: none; font-size: 0.6rem; }
     .tab.active { background: #000000; color: #ffd700; border-bottom: 2px solid #ffd700; }
 
     .upgrade-item, .prestige-item { background: #0a0a0a; border-radius: 20px; padding: 12px; margin: 10px 0; display: flex; flex-direction: column; gap: 8px; border: 1px solid #222222; color: #ffffff; }
@@ -261,6 +244,7 @@
     button:hover { background: #333333; }
     button:disabled { opacity: 0.5; cursor: not-allowed; }
 
+    /* Shop styles */
     .shop-tier { background: linear-gradient(145deg, #1a1a1a, #0a0a0a); border-radius: 20px; padding: 16px; margin: 10px 0; border: 1px solid #333333; color: #ffffff; position: relative; overflow: hidden; }
     .shop-tier.featured { border: 2px solid #ffd700; box-shadow: 0 0 20px rgba(255,215,0,0.3); }
     .shop-tier.best-value { border: 2px solid #ffd700; box-shadow: 0 0 30px rgba(255,215,0,0.5); background: linear-gradient(145deg, #222200, #0a0a00); }
@@ -274,85 +258,31 @@
     .tier-owned-count { font-size: 0.8rem; color: #ffd700; margin-bottom: 4px; }
     .tier-value { font-size: 0.75rem; color: #888888; margin-bottom: 8px; }
     .polygon-rate { font-size: 0.7rem; color: #8247e5; margin-bottom: 6px; }
-    .payment-address { font-size: 0.65rem; color: #8247e5; margin: 4px 0; word-break: break-all; background: #111; padding: 6px; border-radius: 8px; }
     .buy-tier-btn { width: 100%; background: #ffd700; color: #000; font-weight: bold; padding: 12px; border-radius: 25px; border: none; cursor: pointer; border-bottom: 3px solid #cc9900; font-size: 0.9rem; }
     .payment-options { display: flex; gap: 6px; margin-top: 6px; }
     .payment-btn { flex: 1; font-size: 0.7rem; padding: 8px 6px; background: #333; border-radius: 15px; border: none; color: #fff; cursor: pointer; border-bottom: 2px solid #555; }
     .payment-btn.polygon-btn { background: #8247e5; border-bottom-color: #6a3ab5; }
 
     /* Payment modal */
-    .payment-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.9);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-    }
-    .payment-modal-content {
-      background: #1a1a1a;
-      border-radius: 20px;
-      padding: 20px;
-      max-width: 400px;
-      width: 90%;
-      border: 2px solid #8247e5;
-      color: #fff;
-    }
-    .payment-modal h3 {
-      color: #8247e5;
-      margin-bottom: 10px;
-    }
-    .payment-modal .address-copy {
-      background: #111;
-      padding: 10px;
-      border-radius: 10px;
-      word-break: break-all;
-      font-size: 0.75rem;
-      color: #8247e5;
-      margin: 10px 0;
-      cursor: pointer;
-      border: 1px solid #333;
-    }
-    .payment-modal .amount-display {
-      font-size: 1.2rem;
-      color: #ffd700;
-      margin: 10px 0;
-    }
-    .payment-modal button {
-      width: 100%;
-      margin: 5px 0;
-    }
-    .payment-modal .close-btn {
-      background: #444;
-      border-bottom-color: #666;
-    }
-    .payment-modal .verify-btn {
-      background: #1a5c1a;
-      border-bottom-color: #2d8f2d;
-    }
-    .payment-modal .verify-btn:disabled {
-      background: #333;
-      border-bottom-color: #555;
-      cursor: not-allowed;
-    }
-    .payment-modal .status-text {
-      font-size: 0.8rem;
-      margin: 8px 0;
-      text-align: center;
-    }
-    .payment-modal .status-text.verifying {
-      color: #ffd700;
-    }
-    .payment-modal .status-text.success {
-      color: #4caf50;
-    }
-    .payment-modal .status-text.error {
-      color: #f44336;
-    }
+    .payment-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+    .payment-modal-content { background: #1a1a1a; border-radius: 20px; padding: 20px; max-width: 400px; width: 90%; border: 2px solid #8247e5; color: #fff; }
+    .payment-modal h3 { color: #8247e5; margin-bottom: 10px; }
+    .payment-modal .address-copy { background: #111; padding: 10px; border-radius: 10px; word-break: break-all; font-size: 0.75rem; color: #8247e5; margin: 10px 0; cursor: pointer; border: 1px solid #333; }
+    .payment-modal .amount-display { font-size: 1.2rem; color: #ffd700; margin: 10px 0; }
+    .payment-modal button { width: 100%; margin: 5px 0; }
+    .payment-modal .close-btn { background: #444; border-bottom-color: #666; }
+    .payment-modal .verify-btn { background: #1a5c1a; border-bottom-color: #2d8f2d; }
+    .payment-modal .verify-btn:disabled { background: #333; border-bottom-color: #555; cursor: not-allowed; }
+    .payment-modal .status-text { font-size: 0.8rem; margin: 8px 0; text-align: center; }
+    .payment-modal .status-text.verifying { color: #ffd700; }
+    .payment-modal .status-text.success { color: #4caf50; }
+    .payment-modal .status-text.error { color: #f44336; }
+
+    /* World Boss & Arena styles */
+    .boss-card, .arena-card { background: #0a0a0a; border-radius: 20px; padding: 16px; margin: 10px 0; border: 1px solid #333; color: #fff; }
+    .boss-hp-bar { background: #111; height: 20px; border-radius: 10px; overflow: hidden; border: 1px solid #333; margin: 10px 0; }
+    .boss-hp-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, #c44, #f66); transition: width 0.3s; }
+    .arena-opponent { background: #0a0a0a; border-radius: 15px; padding: 12px; margin: 8px 0; border: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
 
     .save-slot { background: #0a0a0a; border-radius: 16px; padding: 14px; margin: 10px 0; border: 1px solid #333; cursor: pointer; transition: all 0.2s; }
     .save-slot:hover { border-color: #ffd700; background: #111; }
@@ -389,240 +319,69 @@
     const PAYMENT_ADDRESS = '0x7efCa6129eAFD3FAFf3134D74d3cA04ab2894983';
     const POLYGON_RPC_URL = 'https://polygon-rpc.com';
     
-    function gbpToPolygon(gbp) {
-      return (gbp / POLYGON_RATE_GBP).toFixed(2);
-    }
+    function gbpToPolygon(gbp) { return (gbp / POLYGON_RATE_GBP).toFixed(2); }
 
-    // ============ REAL BLOCKCHAIN VERIFICATION ============
-    
     async function verifyTransaction(txHash, expectedAmountPOL, tierId) {
       const tier = state.shopTiers.find(t => t.id === tierId);
       if (!tier) return { success: false, error: 'Invalid tier' };
-      
       try {
-        // Call Polygon RPC to get transaction details
-        const response = await fetch(POLYGON_RPC_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            jsonrpc: '2.0',
-            method: 'eth_getTransactionReceipt',
-            params: [txHash],
-            id: 1
-          })
-        });
-        
+        const response = await fetch(POLYGON_RPC_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', method: 'eth_getTransactionReceipt', params: [txHash], id: 1 }) });
         const data = await response.json();
-        
-        if (data.error) {
-          return { success: false, error: 'Transaction not found or still pending. Please wait for confirmation.' };
-        }
-        
-        if (!data.result) {
-          return { success: false, error: 'Transaction not found. Check the hash and try again.' };
-        }
-        
+        if (data.error) return { success: false, error: 'Transaction not found or still pending.' };
+        if (!data.result) return { success: false, error: 'Transaction not found.' };
         const receipt = data.result;
-        
-        // Verify transaction was successful
-        if (receipt.status !== '0x1') {
-          return { success: false, error: 'Transaction failed on the blockchain.' };
-        }
-        
-        // Verify the recipient address (checksum comparison)
-        if (receipt.to && receipt.to.toLowerCase() !== PAYMENT_ADDRESS.toLowerCase()) {
-          return { success: false, error: 'Payment was not sent to the correct address.' };
-        }
-        
-        // Get the transaction details to verify amount
-        const txResponse = await fetch(POLYGON_RPC_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            jsonrpc: '2.0',
-            method: 'eth_getTransactionByHash',
-            params: [txHash],
-            id: 1
-          })
-        });
-        
+        if (receipt.status !== '0x1') return { success: false, error: 'Transaction failed.' };
+        if (receipt.to && receipt.to.toLowerCase() !== PAYMENT_ADDRESS.toLowerCase()) return { success: false, error: 'Wrong recipient address.' };
+        const txResponse = await fetch(POLYGON_RPC_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', method: 'eth_getTransactionByHash', params: [txHash], id: 1 }) });
         const txData = await txResponse.json();
-        
-        if (!txData.result) {
-          // Still try to verify with just the receipt
-          return verifyByReceiptOnly(receipt, expectedAmountPOL, tier, tierId);
-        }
-        
-        // Convert wei to POL (1 POL = 10^18 wei)
-        const amountWei = BigInt(txData.result.value);
-        const amountPOL = Number(amountWei) / 1e18;
+        if (!txData.result) return { success: false, error: 'Unable to verify amount.' };
+        const amountPOL = Number(BigInt(txData.result.value)) / 1e18;
         const expectedPOL = parseFloat(expectedAmountPOL);
-        
-        // Allow 1% tolerance for price fluctuations
-        const tolerance = expectedPOL * 0.01;
-        
-        if (amountPOL >= expectedPOL - tolerance) {
-          return await processSuccessfulPayment(tier, tierId, txHash);
-        } else {
-          return { 
-            success: false, 
-            error: `Insufficient payment. Sent: ${amountPOL.toFixed(4)} POL, Required: ${expectedPOL.toFixed(2)} POL` 
-          };
+        if (amountPOL >= expectedPOL * 0.99) {
+          if (!state.tierPurchases[tierId]) state.tierPurchases[tierId] = 0;
+          state.shopMultiplierOwned += tier.multiplier; state.tierPurchases[tierId]++; saveCurrentProfile();
+          return { success: true, message: `✅ Verified! ${tier.name} +x${tier.multiplier}\nTotal: x${getTotalMultiplier()}` };
         }
-        
-      } catch (error) {
-        console.error('Verification error:', error);
-        return { success: false, error: 'Network error. Please try again or check your connection.' };
-      }
-    }
-    
-    async function verifyByReceiptOnly(receipt, expectedAmountPOL, tier, tierId) {
-      // Fallback: check receipt logs for token transfer
-      // For native POL transfers, we can check the receipt
-      return { 
-        success: false, 
-        error: 'Unable to verify exact amount. Please ensure you sent ' + expectedAmountPOL + ' POL.' 
-      };
-    }
-    
-    async function processSuccessfulPayment(tier, tierId, txHash) {
-      if (!state.tierPurchases[tierId]) state.tierPurchases[tierId] = 0;
-      state.shopMultiplierOwned += tier.multiplier;
-      state.tierPurchases[tierId]++;
-      saveCurrentProfile();
-      
-      return {
-        success: true,
-        message: `✅ Payment Verified on Polygon!\n\nTransaction: ${txHash.slice(0,10)}...${txHash.slice(-6)}\n\n${tier.name} activated!\n+x${tier.multiplier} multiplier added!\n\nTotal multiplier: x${getTotalMultiplier()}`
-      };
+        return { success: false, error: `Insufficient. Sent: ${amountPOL.toFixed(4)} POL, Need: ${expectedPOL.toFixed(2)} POL` };
+      } catch (error) { return { success: false, error: 'Network error. Try again.' }; }
     }
 
-    // ============ PAYMENT MODAL ============
-    
     function showPaymentModal(tierId) {
-      const tier = state.shopTiers.find(t => t.id === tierId);
-      if (!tier) return;
-      
+      const tier = state.shopTiers.find(t => t.id === tierId); if (!tier) return;
       const polAmount = gbpToPolygon(tier.price);
-      
-      const existingModal = document.querySelector('.payment-modal');
-      if (existingModal) existingModal.remove();
-      
-      const modal = document.createElement('div');
-      modal.className = 'payment-modal';
-      modal.innerHTML = `
-        <div class="payment-modal-content">
-          <h3>🔷 Polygon Payment</h3>
-          <p>${tier.name} - x${tier.multiplier} Multiplier</p>
-          <div class="amount-display">£${tier.price.toFixed(2)} = ${polAmount} POL</div>
-          <p style="font-size:0.8rem;color:#888;">Send exactly ${polAmount} POL to:</p>
-          <div class="address-copy" id="copyAddress" title="Click to copy">${PAYMENT_ADDRESS}</div>
-          <p style="font-size:0.7rem;color:#888;margin:5px 0;">Click address to copy • Polygon Network Only</p>
-          <p style="font-size:0.7rem;color:#888;">After sending, paste your transaction hash:</p>
-          <input class="input-field" id="txHashInput" placeholder="0x... transaction hash" style="margin:5px 0;font-size:0.8rem;" />
-          <div class="status-text" id="statusText"></div>
-          <button class="verify-btn" id="verifyPaymentBtn">🔍 Verify Payment on Blockchain</button>
-          <button class="close-btn" id="closeModalBtn">❌ Cancel</button>
-        </div>
-      `;
-      
+      const existingModal = document.querySelector('.payment-modal'); if (existingModal) existingModal.remove();
+      const modal = document.createElement('div'); modal.className = 'payment-modal';
+      modal.innerHTML = `<div class="payment-modal-content"><h3>🔷 Polygon Payment</h3><p>${tier.name} - x${tier.multiplier}</p><div class="amount-display">£${tier.price.toFixed(2)} = ${polAmount} POL</div><p style="font-size:0.8rem;color:#888;">Send exactly ${polAmount} POL to:</p><div class="address-copy" id="copyAddress">${PAYMENT_ADDRESS}</div><p style="font-size:0.7rem;color:#888;">Click to copy • Polygon Only</p><input class="input-field" id="txHashInput" placeholder="0x... transaction hash" style="margin:5px 0;font-size:0.8rem;" /><div class="status-text" id="statusText"></div><button class="verify-btn" id="verifyPaymentBtn">🔍 Verify on Blockchain</button><button class="close-btn" id="closeModalBtn">❌ Cancel</button></div>`;
       document.body.appendChild(modal);
-      
-      // Copy address
-      document.getElementById('copyAddress').addEventListener('click', function() {
-        navigator.clipboard.writeText(PAYMENT_ADDRESS).then(() => {
-          this.style.background = '#1a3a1a';
-          this.textContent = '✅ Address Copied!';
-          setTimeout(() => { this.style.background = '#111'; this.textContent = PAYMENT_ADDRESS; }, 2000);
-        });
-      });
-      
-      // Verify payment
+      document.getElementById('copyAddress').addEventListener('click', function() { navigator.clipboard.writeText(PAYMENT_ADDRESS).then(()=>{ this.style.background='#1a3a1a'; this.textContent='✅ Copied!'; setTimeout(()=>{ this.style.background='#111'; this.textContent=PAYMENT_ADDRESS; },2000); }); });
       document.getElementById('verifyPaymentBtn').addEventListener('click', async function() {
-        const txHash = document.getElementById('txHashInput').value.trim();
-        const statusText = document.getElementById('statusText');
-        const verifyBtn = document.getElementById('verifyPaymentBtn');
-        
-        if (!txHash || !txHash.startsWith('0x')) {
-          statusText.textContent = '⚠️ Please enter a valid transaction hash (starts with 0x)';
-          statusText.className = 'status-text error';
-          return;
-        }
-        
-        statusText.textContent = '🔍 Verifying on Polygon blockchain...';
-        statusText.className = 'status-text verifying';
-        verifyBtn.disabled = true;
-        verifyBtn.textContent = '⏳ Verifying...';
-        
+        const txHash = document.getElementById('txHashInput').value.trim(), st = document.getElementById('statusText'), vb = document.getElementById('verifyPaymentBtn');
+        if (!txHash || !txHash.startsWith('0x')) { st.textContent='⚠️ Invalid hash'; st.className='status-text error'; return; }
+        st.textContent='🔍 Verifying on Polygon...'; st.className='status-text verifying'; vb.disabled=true; vb.textContent='⏳ Verifying...';
         const result = await verifyTransaction(txHash, polAmount, tierId);
-        
-        if (result.success) {
-          statusText.textContent = result.message;
-          statusText.className = 'status-text success';
-          verifyBtn.textContent = '✅ Verified!';
-          
-          setTimeout(() => {
-            modal.remove();
-            renderShopTab();
-          }, 2000);
-        } else {
-          statusText.textContent = '❌ ' + result.error;
-          statusText.className = 'status-text error';
-          verifyBtn.disabled = false;
-          verifyBtn.textContent = '🔍 Try Again';
-        }
+        if (result.success) { st.textContent=result.message; st.className='status-text success'; vb.textContent='✅ Verified!'; setTimeout(()=>{ modal.remove(); renderShopTab(); },2000); }
+        else { st.textContent='❌ '+result.error; st.className='status-text error'; vb.disabled=false; vb.textContent='🔍 Try Again'; }
       });
-      
-      document.getElementById('closeModalBtn').addEventListener('click', () => modal.remove());
-      modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+      document.getElementById('closeModalBtn').addEventListener('click',()=>modal.remove());
+      modal.addEventListener('click',(e)=>{ if(e.target===modal) modal.remove(); });
     }
-    
+
     function showPaypalModal(tierId) {
-      const tier = state.shopTiers.find(t => t.id === tierId);
-      if (!tier) return;
-      
-      const existingModal = document.querySelector('.payment-modal');
-      if (existingModal) existingModal.remove();
-      
-      const modal = document.createElement('div');
-      modal.className = 'payment-modal';
-      modal.innerHTML = `
-        <div class="payment-modal-content">
-          <h3>💰 PayPal Payment</h3>
-          <p>${tier.name} - x${tier.multiplier} Multiplier</p>
-          <div class="amount-display">£${tier.price.toFixed(2)}</div>
-          <p style="font-size:0.8rem;color:#888;">Send payment via PayPal to complete your purchase.</p>
-          <button class="buy-tier-btn" id="confirmPaypalBtn">✅ I've Sent Payment</button>
-          <button class="close-btn" id="closePaypalBtn">❌ Cancel</button>
-        </div>
-      `;
-      
+      const tier = state.shopTiers.find(t => t.id === tierId); if (!tier) return;
+      const existingModal = document.querySelector('.payment-modal'); if (existingModal) existingModal.remove();
+      const modal = document.createElement('div'); modal.className = 'payment-modal';
+      modal.innerHTML = `<div class="payment-modal-content"><h3>💰 PayPal Payment</h3><p>${tier.name} - x${tier.multiplier}</p><div class="amount-display">£${tier.price.toFixed(2)}</div><button class="buy-tier-btn" id="confirmPaypalBtn">✅ I've Sent Payment</button><button class="close-btn" id="closePaypalBtn">❌ Cancel</button></div>`;
       document.body.appendChild(modal);
-      
-      document.getElementById('confirmPaypalBtn').addEventListener('click', function() {
-        if (!state.tierPurchases[tierId]) state.tierPurchases[tierId] = 0;
-        state.shopMultiplierOwned += tier.multiplier;
-        state.tierPurchases[tierId]++;
-        saveCurrentProfile();
-        modal.remove();
-        alert(`✅ PayPal Payment Successful!\n\n${tier.name} activated!\n+x${tier.multiplier} multiplier added!\n\nTotal multiplier: x${getTotalMultiplier()}`);
-        renderShopTab();
-      });
-      
-      document.getElementById('closePaypalBtn').addEventListener('click', () => modal.remove());
-      modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+      document.getElementById('confirmPaypalBtn').addEventListener('click',function(){ if(!state.tierPurchases[tierId])state.tierPurchases[tierId]=0; state.shopMultiplierOwned+=tier.multiplier; state.tierPurchases[tierId]++; saveCurrentProfile(); modal.remove(); alert(`✅ PayPal Successful!\n${tier.name} +x${tier.multiplier}\nTotal: x${getTotalMultiplier()}`); renderShopTab(); });
+      document.getElementById('closePaypalBtn').addEventListener('click',()=>modal.remove());
+      modal.addEventListener('click',(e)=>{ if(e.target===modal) modal.remove(); });
     }
 
     function getBreedStats(breedName) {
       let seed = 0;
       for (let i = 0; i < breedName.length; i++) seed += breedName.charCodeAt(i);
       function seededRandom(s) { const x = Math.sin(s * 9301 + 49297) * 233280; return Math.abs(x - Math.floor(x)); }
-      return {
-        health: Math.floor(seededRandom(seed) * 5) + 1,
-        strength: Math.floor(seededRandom(seed + 1) * 5) + 1,
-        attack: Math.floor(seededRandom(seed + 2) * 5) + 1,
-        defence: Math.floor(seededRandom(seed + 3) * 5) + 1
-      };
+      return { health: Math.floor(seededRandom(seed) * 5) + 1, strength: Math.floor(seededRandom(seed + 1) * 5) + 1, attack: Math.floor(seededRandom(seed + 2) * 5) + 1, defence: Math.floor(seededRandom(seed + 3) * 5) + 1 };
     }
 
     const state = {
@@ -630,6 +389,7 @@
       bones: 0, totalTaps: 0, prestigeOwned: 0, tapPowerOwned: 0, autoCollectorOwned: 0,
       tapPower: 1, autoCollector: 0, prestigeMultiplier: 1, currentTapImage: 0,
       level: 1, exp: 0, expToNextLevel: 100, shopMultiplierOwned: 0, tierPurchases: {},
+      worldBossHP: 10000, worldBossMaxHP: 10000, arenaWins: 0,
       titleBannerUrl: 'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/file_000000006e3c7243adb2fa6d9b40ef21.png',
       defaultTapImages: [
         'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-054556%7E2.png',
@@ -644,20 +404,8 @@
         'American PitBull': ['Screenshot_20260514-111127~2.png','Screenshot_20260514-111205~2.png','Screenshot_20260514-111212~2.png','Screenshot_20260514-111315~2.png','Screenshot_20260514-111344~2.png','Screenshot_20260514-111408~2.png'].map(f=>'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/'+f),
         'American Bulldog': ['Screenshot_20260514-115657~3.png','Screenshot_20260514-115959~2.png','Screenshot_20260514-120214~2.png','Screenshot_20260514-120228~2.png','Screenshot_20260514-120237~2.png','Screenshot_20260514-120350~2.png'].map(f=>'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/'+f),
         'Cane Corso': ['Screenshot_20260514-134601~2.png','Screenshot_20260514-134617~2.png','Screenshot_20260514-134621~2.png','Screenshot_20260514-134730~2.png','Screenshot_20260514-134740~2.png','Screenshot_20260514-134753~2.png'].map(f=>'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/'+f),
-        'Japanese Akita': [
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-144213%7E3.png',
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-144154%7E2.png',
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-144013%7E2.png',
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-144027%7E2.png',
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-143958%7E2.png'
-        ],
-        'Chihuahua': [
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/file_000000003b64720a9b36250101dcd849%7E8.png',
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/file_000000003b64720a9b36250101dcd849%7E7.png',
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/file_000000003b64720a9b36250101dcd849%7E6.png',
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/file_000000003b64720a9b36250101dcd849%7E5.png',
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/file_000000003b64720a9b36250101dcd849%7E4.png'
-        ]
+        'Japanese Akita': ['Screenshot_20260514-144213~3.png','Screenshot_20260514-144154~2.png','Screenshot_20260514-144013~2.png','Screenshot_20260514-144027~2.png','Screenshot_20260514-143958~2.png'].map(f=>'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/'+f),
+        'Chihuahua': ['file_000000003b64720a9b36250101dcd849~8.png','file_000000003b64720a9b36250101dcd849~7.png','file_000000003b64720a9b36250101dcd849~6.png','file_000000003b64720a9b36250101dcd849~5.png','file_000000003b64720a9b36250101dcd849~4.png'].map(f=>'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/'+f)
       },
       breedImages: {
         'Staffordshire Bull Terrier': { url: 'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-062136%7E2.png', position: 'center 35%' },
@@ -668,11 +416,7 @@
         'Japanese Akita': { url: 'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/file_00000000340c71f4b8e56955c28fa581.png', position: 'center 35%' },
         'Chihuahua': { url: 'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/file_000000009f9071f4aff9ecca89a24b9b.png', position: 'center 35%' }
       },
-      breedOptions: [
-        'Staffordshire Bull Terrier', 'American PitBull', 'American Bulldog',
-        'XL Bully', 'Cane Corso', 'Japanese Akita', 'Doberman',
-        'Husky', 'Chihuahua', 'Jack Russell', 'Shih Tzu', 'German Shepherd'
-      ],
+      breedOptions: ['Staffordshire Bull Terrier','American PitBull','American Bulldog','XL Bully','Cane Corso','Japanese Akita','Doberman','Husky','Chihuahua','Jack Russell','Shih Tzu','German Shepherd'],
       shopTiers: [
         { id: 1, name: 'Starter Pack', multiplier: 10, price: 0.99, value: '£0.099 per x1' },
         { id: 2, name: 'Booster Pack', multiplier: 25, price: 1.99, value: '£0.080 per x1' },
@@ -681,92 +425,23 @@
         { id: 5, name: 'Ultimate Pack', multiplier: 500, price: 14.99, value: '£0.030 per x1' }
       ]
     };
-
-    state.tierPurchases = {};
-    state.shopTiers.forEach(tier => { state.tierPurchases[tier.id] = 0; });
+    state.tierPurchases = {}; state.shopTiers.forEach(tier => { state.tierPurchases[tier.id] = 0; });
 
     // ============ SAVE SYSTEM ============
     function getAllProfiles() { const p = localStorage.getItem('pawsOfDestiny_profiles'); return p ? JSON.parse(p) : {}; }
     function saveProfiles(profiles) { localStorage.setItem('pawsOfDestiny_profiles', JSON.stringify(profiles)); }
-    function saveCurrentProfile() {
-      if (!state.currentProfileId) return;
-      const profiles = getAllProfiles();
-      profiles[state.currentProfileId] = {
-        playerName: state.playerName, breed: state.breed, breedStats: state.breedStats,
-        bones: state.bones, totalTaps: state.totalTaps, prestigeOwned: state.prestigeOwned,
-        tapPowerOwned: state.tapPowerOwned, autoCollectorOwned: state.autoCollectorOwned,
-        tapPower: state.tapPower, autoCollector: state.autoCollector,
-        prestigeMultiplier: state.prestigeMultiplier, currentTapImage: state.currentTapImage,
-        level: state.level, exp: state.exp, expToNextLevel: state.expToNextLevel,
-        shopMultiplierOwned: state.shopMultiplierOwned, tierPurchases: state.tierPurchases,
-        lastSaved: new Date().toISOString()
-      };
-      saveProfiles(profiles);
-    }
-    function loadProfile(profileId) {
-      const profiles = getAllProfiles(), profile = profiles[profileId];
-      if (profile) { applyProfileData(profile); state.currentProfileId = profileId; return true; }
-      return false;
-    }
-    function applyProfileData(profile) {
-      state.playerName = profile.playerName || ''; state.breed = profile.breed || '';
-      state.breedStats = profile.breedStats || getBreedStats(profile.breed);
-      state.bones = profile.bones || 0; state.totalTaps = profile.totalTaps || 0;
-      state.prestigeOwned = profile.prestigeOwned || 0;
-      state.tapPowerOwned = profile.tapPowerOwned || 0; state.autoCollectorOwned = profile.autoCollectorOwned || 0;
-      state.tapPower = profile.tapPower || 1; state.autoCollector = profile.autoCollector || 0;
-      state.prestigeMultiplier = profile.prestigeMultiplier || 1;
-      state.currentTapImage = profile.currentTapImage || 0;
-      state.level = profile.level || 1; state.exp = profile.exp || 0; state.expToNextLevel = profile.expToNextLevel || 100;
-      state.shopMultiplierOwned = profile.shopMultiplierOwned || 0;
-      state.tierPurchases = profile.tierPurchases || {};
-      state.shopTiers.forEach(tier => { if (!state.tierPurchases[tier.id]) state.tierPurchases[tier.id] = 0; });
-    }
-    function exportSaveFile() {
-      const saveData = {
-        playerName: state.playerName, breed: state.breed, breedStats: state.breedStats,
-        bones: state.bones, totalTaps: state.totalTaps, prestigeOwned: state.prestigeOwned,
-        tapPowerOwned: state.tapPowerOwned, autoCollectorOwned: state.autoCollectorOwned,
-        tapPower: state.tapPower, autoCollector: state.autoCollector,
-        prestigeMultiplier: state.prestigeMultiplier, currentTapImage: state.currentTapImage,
-        level: state.level, exp: state.exp, expToNextLevel: state.expToNextLevel,
-        shopMultiplierOwned: state.shopMultiplierOwned, tierPurchases: state.tierPurchases,
-        timestamp: new Date().toISOString()
-      };
-      const blob = new Blob([JSON.stringify(saveData, null, 2)], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob), a = document.createElement('a');
-      a.href = url; a.download = `paws_of_destiny_${state.playerName}_${new Date().toISOString().slice(0,10)}.txt`;
-      document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-    }
+    function saveCurrentProfile() { if (!state.currentProfileId) return; const profiles = getAllProfiles(); profiles[state.currentProfileId] = { playerName:state.playerName,breed:state.breed,breedStats:state.breedStats,bones:state.bones,totalTaps:state.totalTaps,prestigeOwned:state.prestigeOwned,tapPowerOwned:state.tapPowerOwned,autoCollectorOwned:state.autoCollectorOwned,tapPower:state.tapPower,autoCollector:state.autoCollector,prestigeMultiplier:state.prestigeMultiplier,currentTapImage:state.currentTapImage,level:state.level,exp:state.exp,expToNextLevel:state.expToNextLevel,shopMultiplierOwned:state.shopMultiplierOwned,tierPurchases:state.tierPurchases,worldBossHP:state.worldBossHP,worldBossMaxHP:state.worldBossMaxHP,arenaWins:state.arenaWins,lastSaved:new Date().toISOString() }; saveProfiles(profiles); }
+    function loadProfile(profileId) { const profiles = getAllProfiles(), profile = profiles[profileId]; if (profile) { applyProfileData(profile); state.currentProfileId = profileId; return true; } return false; }
+    function applyProfileData(profile) { state.playerName=profile.playerName||'';state.breed=profile.breed||'';state.breedStats=profile.breedStats||getBreedStats(profile.breed);state.bones=profile.bones||0;state.totalTaps=profile.totalTaps||0;state.prestigeOwned=profile.prestigeOwned||0;state.tapPowerOwned=profile.tapPowerOwned||0;state.autoCollectorOwned=profile.autoCollectorOwned||0;state.tapPower=profile.tapPower||1;state.autoCollector=profile.autoCollector||0;state.prestigeMultiplier=profile.prestigeMultiplier||1;state.currentTapImage=profile.currentTapImage||0;state.level=profile.level||1;state.exp=profile.exp||0;state.expToNextLevel=profile.expToNextLevel||100;state.shopMultiplierOwned=profile.shopMultiplierOwned||0;state.tierPurchases=profile.tierPurchases||{};state.worldBossHP=profile.worldBossHP||10000;state.worldBossMaxHP=profile.worldBossMaxHP||10000;state.arenaWins=profile.arenaWins||0; state.shopTiers.forEach(tier=>{if(!state.tierPurchases[tier.id])state.tierPurchases[tier.id]=0;}); }
+    function exportSaveFile() { const saveData = { playerName:state.playerName,breed:state.breed,breedStats:state.breedStats,bones:state.bones,totalTaps:state.totalTaps,prestigeOwned:state.prestigeOwned,tapPowerOwned:state.tapPowerOwned,autoCollectorOwned:state.autoCollectorOwned,tapPower:state.tapPower,autoCollector:state.autoCollector,prestigeMultiplier:state.prestigeMultiplier,currentTapImage:state.currentTapImage,level:state.level,exp:state.exp,expToNextLevel:state.expToNextLevel,shopMultiplierOwned:state.shopMultiplierOwned,tierPurchases:state.tierPurchases,worldBossHP:state.worldBossHP,worldBossMaxHP:state.worldBossMaxHP,arenaWins:state.arenaWins,timestamp:new Date().toISOString() }; const blob=new Blob([JSON.stringify(saveData,null,2)],{type:'text/plain'}); const url=URL.createObjectURL(blob),a=document.createElement('a'); a.href=url;a.download=`paws_of_destiny_${state.playerName}_${new Date().toISOString().slice(0,10)}.txt`; document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url); }
     function importSaveFile() { document.getElementById('importFileInput').click(); }
-    function handleFileImport(event) {
-      const file = event.target.files[0]; if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        try {
-          const saveData = JSON.parse(e.target.result);
-          if (!saveData.playerName || !saveData.breed) { alert('Invalid save file!'); return; }
-          state.currentProfileId = 'profile_' + Date.now(); applyProfileData(saveData);
-          saveCurrentProfile(); state.screen = 'main'; renderMainGame();
-          alert(`Save imported! Welcome back, ${state.playerName}!`);
-        } catch (error) { alert('Failed to parse save file!'); }
-      };
-      reader.readAsText(file); event.target.value = '';
-    }
+    function handleFileImport(event) { const file=event.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=function(e){try{const saveData=JSON.parse(e.target.result);if(!saveData.playerName||!saveData.breed){alert('Invalid save file!');return;}state.currentProfileId='profile_'+Date.now();applyProfileData(saveData);saveCurrentProfile();state.screen='main';renderMainGame();alert(`Save imported! Welcome back, ${state.playerName}!`);}catch(error){alert('Failed to parse save file!');}};reader.readAsText(file);event.target.value=''; }
     function downloadSaveFile() { exportSaveFile(); }
-    function logout() { saveCurrentProfile(); state.currentProfileId = null; state.screen = 'login'; renderLoginScreen(); }
-    function deleteProfile(profileId) { const profiles = getAllProfiles(); delete profiles[profileId]; saveProfiles(profiles); renderLoginScreen(); }
+    function logout() { saveCurrentProfile(); state.currentProfileId=null; state.screen='login'; renderLoginScreen(); }
+    function deleteProfile(profileId) { const profiles=getAllProfiles(); delete profiles[profileId]; saveProfiles(profiles); renderLoginScreen(); }
 
     // ============ STATS & MULTIPLIERS ============
-    function getEffectiveStats() {
-      if (!state.breedStats) return { health: 0, strength: 0, attack: 0, defence: 0 };
-      return {
-        health: state.breedStats.health + state.prestigeOwned,
-        strength: state.breedStats.strength + state.prestigeOwned,
-        attack: state.breedStats.attack + state.prestigeOwned,
-        defence: state.breedStats.defence + state.prestigeOwned
-      };
-    }
+    function getEffectiveStats() { if(!state.breedStats)return{health:0,strength:0,attack:0,defence:0}; return{health:state.breedStats.health+state.prestigeOwned,strength:state.breedStats.strength+state.prestigeOwned,attack:state.breedStats.attack+state.prestigeOwned,defence:state.breedStats.defence+state.prestigeOwned}; }
     function getTotalMultiplier() { return (state.prestigeOwned + 1) + state.shopMultiplierOwned; }
 
     // ============ UPGRADE CALCULATIONS ============
@@ -779,12 +454,105 @@
     function calculateMaxPrestiges() { let a=0,t=0,r=state.bones,c=state.prestigeOwned; while(true){const cost=getPrestigeCost(c);if(r>=cost){r-=cost;t+=cost;a++;c++;}else break;} return{count:a,totalCost:t}; }
     function performPrestige() { state.prestigeOwned++; state.tapPowerOwned=0; state.autoCollectorOwned=0; state.tapPower=1; state.autoCollector=0; state.totalTaps=0; state.level=1; state.exp=0; state.expToNextLevel=getExpForLevel(1); }
 
+    // ============ WORLD BOSS SYSTEM ============
+    function attackWorldBoss() {
+      const damage = state.tapPower * getTotalMultiplier() * 10;
+      state.worldBossHP -= damage;
+      if (state.worldBossHP <= 0) {
+        const reward = state.worldBossMaxHP * 2;
+        state.bones += reward;
+        state.worldBossMaxHP = Math.floor(state.worldBossMaxHP * 1.5);
+        state.worldBossHP = state.worldBossMaxHP;
+        updateBoneDisplay();
+        saveCurrentProfile();
+        alert(`🎉 World Boss Defeated!\n\nReward: ${formatNum(reward)} 🦴\n\nNew boss spawned with ${formatNum(state.worldBossMaxHP)} HP!`);
+      }
+      renderWorldBossTab();
+    }
+
+    function renderWorldBossTab() {
+      const c=document.getElementById('tabContent'); if(!c)return;
+      const hpPercent = Math.max(0, (state.worldBossHP / state.worldBossMaxHP) * 100);
+      c.innerHTML = `<div style="color:#fff;"><h3 style="color:#ffd700;">🐉 World Boss</h3>
+        <div class="boss-card">
+          <h4 style="color:#f66;">🗡️ The Bone Collector</h4>
+          <p style="font-size:0.8rem;color:#888;">A massive beast terrorizing the dog park!</p>
+          <div class="boss-hp-bar"><div class="boss-hp-fill" style="width:${hpPercent}%;"></div></div>
+          <p style="font-size:0.8rem;">HP: ${formatNum(Math.max(0,state.worldBossHP))} / ${formatNum(state.worldBossMaxHP)}</p>
+          <p style="font-size:0.7rem;color:#888;">Your damage: ${formatNum(state.tapPower * getTotalMultiplier() * 10)} per hit</p>
+          <button id="attackBossBtn" style="width:100%;margin-top:10px;">⚔️ Attack Boss</button>
+          <p style="font-size:0.7rem;color:#ffd700;margin-top:5px;">Defeat reward: ${formatNum(state.worldBossMaxHP * 2)} 🦴</p>
+        </div>
+        <p style="color:#888;font-size:0.7rem;text-align:center;">Boss gets stronger after each defeat!</p></div>`;
+      document.getElementById('attackBossBtn').addEventListener('click', attackWorldBoss);
+    }
+
+    function renderArenaTab() {
+      const c=document.getElementById('tabContent'); if(!c)return;
+      const opponents = [
+        { name: 'Rex the Rottweiler', power: 50, reward: 100 },
+        { name: 'Luna the Labrador', power: 120, reward: 250 },
+        { name: 'Max the Mastiff', power: 250, reward: 500 },
+        { name: 'Bella the Boxer', power: 500, reward: 1000 }
+      ];
+      let html = `<div style="color:#fff;"><h3 style="color:#ffd700;">🏟️ PvP Arena</h3><p style="font-size:0.8rem;color:#888;margin-bottom:10px;">Fight other dogs for glory and bones!</p>`;
+      opponents.forEach(opp => {
+        const winChance = Math.min(95, Math.floor((state.tapPower * getTotalMultiplier() / opp.power) * 50));
+        html += `<div class="arena-opponent"><div><strong>${opp.name}</strong><p style="font-size:0.7rem;color:#888;">Power: ${formatNum(opp.power)} | Win Rate: ${winChance}%</p></div><button class="fight-arena-btn" data-reward="${opp.reward}" data-power="${opp.power}">⚔️ Fight</button></div>`;
+      });
+      html += `<p style="color:#ffd700;margin-top:10px;">🏆 Arena Wins: ${formatNum(state.arenaWins)}</p></div>`;
+      c.innerHTML = html;
+      document.querySelectorAll('.fight-arena-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const reward = parseInt(this.dataset.reward), power = parseInt(this.dataset.power);
+          const winChance = Math.min(95, Math.floor((state.tapPower * getTotalMultiplier() / power) * 50));
+          if (Math.random() * 100 < winChance) {
+            state.bones += reward; state.arenaWins++; updateBoneDisplay(); saveCurrentProfile();
+            alert(`🏆 Victory!\n\nYou defeated the opponent!\n+${formatNum(reward)} 🦴`);
+          } else {
+            alert(`💀 Defeat!\n\nYou lost the battle. Train harder!`);
+          }
+          renderArenaTab();
+        });
+      });
+    }
+
+    function renderHowToPlayTab() {
+      const c=document.getElementById('tabContent'); if(!c)return;
+      c.innerHTML = `<div style="color:#fff;"><h3 style="color:#ffd700;">📖 How to Play</h3>
+        <div style="background:#0a0a0a;border-radius:15px;padding:12px;margin:8px 0;border:1px solid #333;">
+          <h4 style="color:#ffd700;">🐾 Getting Started</h4><p style="font-size:0.8rem;">Choose your breed, enter a name, and start tapping! Each tap earns bones based on your multiplier.</p></div>
+        <div style="background:#0a0a0a;border-radius:15px;padding:12px;margin:8px 0;border:1px solid #333;">
+          <h4 style="color:#ffd700;">📈 Upgrades</h4><p style="font-size:0.8rem;">Buy Tap Power to increase earnings per tap. Auto Collector earns bones passively every second.</p></div>
+        <div style="background:#0a0a0a;border-radius:15px;padding:12px;margin:8px 0;border:1px solid #333;">
+          <h4 style="color:#ffd700;">🌟 Prestige</h4><p style="font-size:0.8rem;">Reset progress for permanent multipliers. Each prestige gives +1x earnings & XP boost.</p></div>
+        <div style="background:#0a0a0a;border-radius:15px;padding:12px;margin:8px 0;border:1px solid #333;">
+          <h4 style="color:#ffd700;">🛒 Shop</h4><p style="font-size:0.8rem;">Buy permanent multipliers with Polygon (POL) crypto or PayPal. Multipliers stack unlimited times!</p></div>
+        <div style="background:#0a0a0a;border-radius:15px;padding:12px;margin:8px 0;border:1px solid #333;">
+          <h4 style="color:#ffd700;">🐉 World Boss</h4><p style="font-size:0.8rem;">Attack the world boss for huge bone rewards. Boss gets stronger after each defeat!</p></div>
+        <div style="background:#0a0a0a;border-radius:15px;padding:12px;margin:8px 0;border:1px solid #333;">
+          <h4 style="color:#ffd700;">🏟️ Arena</h4><p style="font-size:0.8rem;">Fight other dogs in PvP battles. Higher power = better win rate!</p></div></div>`;
+    }
+
+    function renderAboutGameTab() {
+      const c=document.getElementById('tabContent'); if(!c)return;
+      c.innerHTML = `<div style="color:#fff;"><h3 style="color:#ffd700;">ℹ️ About Paws of Destiny</h3>
+        <div style="background:#0a0a0a;border-radius:15px;padding:16px;margin:10px 0;border:1px solid #333;text-align:center;">
+          <p style="font-size:1.2rem;color:#ffd700;">🐾 Paws of Destiny</p>
+          <p style="font-size:0.9rem;color:#ccc;">Version 1.0</p>
+          <p style="font-size:0.8rem;color:#888;margin-top:10px;">An idle tapping RPG where you choose your dog breed and build your legacy!</p>
+          <p style="font-size:0.8rem;color:#888;margin-top:5px;">Featuring 12 unique breeds, real Polygon crypto payments, and endless progression.</p>
+          <p style="font-size:0.7rem;color:#8247e5;margin-top:15px;">🔷 Powered by Polygon Network</p>
+          <p style="font-size:0.7rem;color:#888;">Low fees • Fast transactions • Real crypto rewards</p>
+          <p style="font-size:0.7rem;color:#666;margin-top:10px;">© 2025 Paws of Destiny. All rights reserved.</p></div></div>`;
+    }
+
     // ============ HELPERS ============
     function getTapImages() { return state.breedTapImages[state.breed] || state.defaultTapImages; }
     function getExpForLevel(l) { return Math.floor(100 * Math.pow(1.5, l - 1)); }
     function addExp(amount) { state.exp += amount * getTotalMultiplier(); while (state.exp >= state.expToNextLevel) { state.exp -= state.expToNextLevel; state.level++; state.expToNextLevel = getExpForLevel(state.level); } updateExpBar(); }
     function updateExpBar() { const ef=document.getElementById('expFill'),et=document.getElementById('expText'),ld=document.getElementById('levelDisplay'); if(ef) ef.style.width=(state.exp/state.expToNextLevel*100)+'%'; if(et) et.textContent=`${formatNum(state.exp)} / ${formatNum(state.expToNextLevel)} EXP`; if(ld) ld.textContent=`⭐ Level ${formatNum(state.level)}`; }
-    function updatePrestigeUnderTapper() { const el = document.getElementById('prestigeUnderTapper'); if (el) el.textContent = `⭐ Prestige ${formatNum(state.prestigeOwned)} owned`; }
+    function updatePrestigeUnderTapper() { const el=document.getElementById('prestigeUnderTapper'); if(el) el.textContent=`⭐ Prestige ${formatNum(state.prestigeOwned)} owned`; }
 
     // ============ RENDER ============
     function renderLoginScreen() {
@@ -796,7 +564,7 @@
       appDiv.innerHTML=h;
       document.querySelectorAll('.save-slot').forEach(s=>{s.addEventListener('click',e=>{if(e.target.classList.contains('delete-profile-btn'))return;if(loadProfile(s.dataset.profile)){state.screen='main';renderMainGame();}});});
       document.querySelectorAll('.delete-profile-btn').forEach(b=>{b.addEventListener('click',e=>{e.stopPropagation();if(confirm('Delete?'))deleteProfile(b.dataset.profile);});});
-      document.getElementById('newProfileBtn').addEventListener('click',()=>{ state.screen='setup';state.currentProfileId='profile_'+Date.now();state.playerName='';state.breed='';state.breedStats=null;state.bones=0;state.totalTaps=0;state.prestigeOwned=0;state.tapPowerOwned=0;state.autoCollectorOwned=0;state.tapPower=1;state.autoCollector=0;state.prestigeMultiplier=1;state.currentTapImage=0;state.level=1;state.exp=0;state.expToNextLevel=getExpForLevel(1);state.shopMultiplierOwned=0;state.tierPurchases={};state.shopTiers.forEach(t=>{state.tierPurchases[t.id]=0;});renderSetup(); });
+      document.getElementById('newProfileBtn').addEventListener('click',()=>{ state.screen='setup';state.currentProfileId='profile_'+Date.now();state.playerName='';state.breed='';state.breedStats=null;state.bones=0;state.totalTaps=0;state.prestigeOwned=0;state.tapPowerOwned=0;state.autoCollectorOwned=0;state.tapPower=1;state.autoCollector=0;state.prestigeMultiplier=1;state.currentTapImage=0;state.level=1;state.exp=0;state.expToNextLevel=getExpForLevel(1);state.shopMultiplierOwned=0;state.tierPurchases={};state.worldBossHP=10000;state.worldBossMaxHP=10000;state.arenaWins=0;state.shopTiers.forEach(t=>{state.tierPurchases[t.id]=0;});renderSetup(); });
       document.getElementById('importSaveBtn').addEventListener('click',importSaveFile);
     }
 
@@ -816,42 +584,34 @@
       const isSmallBreed = state.breed === 'Japanese Akita' || state.breed === 'Chihuahua';
       const tapperClass = isSmallBreed ? 'tap-area ' + (state.breed === 'Japanese Akita' ? 'akita-tapper' : 'chihuahua-tapper') : 'tap-area';
       const gifClass = isSmallBreed ? 'tap-gif ' + (state.breed === 'Japanese Akita' ? 'akita-gif' : 'chihuahua-gif') : 'tap-gif';
-      let h=`<div class="title-banner"><img src="${state.titleBannerUrl}" alt="Paws of Destiny"/></div><div class="game-header"><h2>🐕 ${state.playerName}</h2><div class="resource-badge">🦴 <span id="boneDisplay">${formatNum(state.bones)}</span></div></div><div class="screen active" id="mainScreen"><div class="${tapperClass}" id="tapDog"><img src="${cur}" alt="Tap" class="${gifClass}" id="tapGif"/></div><div class="level-container"><div class="level-display" id="levelDisplay">⭐ Level ${formatNum(state.level)}</div><div class="exp-bar-bg"><div class="exp-bar-fill" id="expFill" style="width:${(state.exp/state.expToNextLevel)*100}%;"></div></div><div class="exp-text" id="expText">${formatNum(state.exp)} / ${formatNum(state.expToNextLevel)} EXP (x${tm})</div></div><div class="prestige-under-tapper" id="prestigeUnderTapper">⭐ Prestige ${formatNum(state.prestigeOwned)} owned</div><div class="stat-row"><span>${state.breed}</span></div><div class="tab-row"><div class="tab active" data-tab="profile">🐶 Profile</div><div class="tab" data-tab="upgrades">📈 Upgrades</div><div class="tab" data-tab="prestige">🌟 Prestige</div><div class="tab" data-tab="shop">🛒 Shop</div></div><div id="tabContent"></div></div>`;
+      let h=`<div class="title-banner"><img src="${state.titleBannerUrl}" alt="Paws of Destiny"/></div><div class="game-header"><h2>🐕 ${state.playerName}</h2><div class="resource-badge">🦴 <span id="boneDisplay">${formatNum(state.bones)}</span></div></div><div class="screen active" id="mainScreen"><div class="${tapperClass}" id="tapDog"><img src="${cur}" alt="Tap" class="${gifClass}" id="tapGif"/></div><div class="level-container"><div class="level-display" id="levelDisplay">⭐ Level ${formatNum(state.level)}</div><div class="exp-bar-bg"><div class="exp-bar-fill" id="expFill" style="width:${(state.exp/state.expToNextLevel)*100}%;"></div></div><div class="exp-text" id="expText">${formatNum(state.exp)} / ${formatNum(state.expToNextLevel)} EXP (x${tm})</div></div><div class="prestige-under-tapper" id="prestigeUnderTapper">⭐ Prestige ${formatNum(state.prestigeOwned)} owned</div><div class="stat-row"><span>${state.breed}</span></div>
+        <div class="tab-row">
+          <div class="tab active" data-tab="profile">🐶 Profile</div>
+          <div class="tab" data-tab="upgrades">📈 Upgrades</div>
+          <div class="tab" data-tab="prestige">🌟 Prestige</div>
+          <div class="tab" data-tab="worldboss">🐉 Boss</div>
+          <div class="tab" data-tab="arena">🏟️ Arena</div>
+          <div class="tab" data-tab="shop">🛒 Shop</div>
+          <div class="tab" data-tab="howtoplay">📖 How to Play</div>
+          <div class="tab" data-tab="about">ℹ️ About</div>
+        </div><div id="tabContent"></div></div>`;
       appDiv.innerHTML=h;
       document.getElementById('tapDog').addEventListener('click',handleTap);
       attachTabEvents();renderProfileTab();startAutoCollector();
     }
 
-    function handleTap(){const tm=getTotalMultiplier();state.bones+=state.tapPower*tm;state.totalTaps++;addExp(state.tapPower);updateBoneDisplay();cycleToNextImage();if(state.tabActive==='upgrades')renderUpgradesTab();else if(state.tabActive==='profile')renderProfileTab();else if(state.tabActive==='prestige')renderPrestigeTab();}
+    function handleTap(){const tm=getTotalMultiplier();state.bones+=state.tapPower*tm;state.totalTaps++;addExp(state.tapPower);updateBoneDisplay();cycleToNextImage();if(state.tabActive==='upgrades')renderUpgradesTab();else if(state.tabActive==='profile')renderProfileTab();else if(state.tabActive==='prestige')renderPrestigeTab();else if(state.tabActive==='worldboss')renderWorldBossTab();}
     function cycleToNextImage(){const imgs=getTapImages();state.currentTapImage=(state.currentTapImage+1)%imgs.length;const g=document.getElementById('tapGif');if(g)g.src=imgs[state.currentTapImage];}
     function updateBoneDisplay(){const b=document.getElementById('boneDisplay');if(b)b.textContent=formatNum(state.bones);}
     let autoInterval;
-    function startAutoCollector(){if(autoInterval)clearInterval(autoInterval);autoInterval=setInterval(()=>{if(state.autoCollector>0){const tm=getTotalMultiplier();state.bones+=state.autoCollector*tm;addExp(state.autoCollector);updateBoneDisplay();if(state.tabActive==='upgrades')renderUpgradesTab();else if(state.tabActive==='prestige')renderPrestigeTab();}},1000);}
+    function startAutoCollector(){if(autoInterval)clearInterval(autoInterval);autoInterval=setInterval(()=>{if(state.autoCollector>0){const tm=getTotalMultiplier();state.bones+=state.autoCollector*tm;addExp(state.autoCollector);updateBoneDisplay();if(state.tabActive==='upgrades')renderUpgradesTab();else if(state.tabActive==='prestige')renderPrestigeTab();else if(state.tabActive==='worldboss')renderWorldBossTab();}},1000);}
     state.tabActive='profile';
-    function attachTabEvents(){document.querySelectorAll('.tab').forEach(t=>{t.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');state.tabActive=t.dataset.tab;switch(state.tabActive){case'profile':renderProfileTab();break;case'upgrades':renderUpgradesTab();break;case'prestige':renderPrestigeTab();break;case'shop':renderShopTab();break;}});});}
+    function attachTabEvents(){document.querySelectorAll('.tab').forEach(t=>{t.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');state.tabActive=t.dataset.tab;switch(state.tabActive){case'profile':renderProfileTab();break;case'upgrades':renderUpgradesTab();break;case'prestige':renderPrestigeTab();break;case'worldboss':renderWorldBossTab();break;case'arena':renderArenaTab();break;case'shop':renderShopTab();break;case'howtoplay':renderHowToPlayTab();break;case'about':renderAboutGameTab();break;}});});}
 
     function renderProfileTab(){ const c=document.getElementById('tabContent');if(!c)return; const stats=getEffectiveStats(),tm=getTotalMultiplier(); c.innerHTML=`<div style="color:#fff;padding:10px;"><h3 style="color:#ffd700;">🐾 ${state.playerName}</h3><p><strong>Breed:</strong> ${state.breed}</p><div class="stats-grid"><div class="stat-box"><div class="stat-label">❤️ Health</div><div class="stat-value">${stats.health}</div></div><div class="stat-box"><div class="stat-label">💪 Strength</div><div class="stat-value">${stats.strength}</div></div><div class="stat-box"><div class="stat-label">⚔️ Attack</div><div class="stat-value">${stats.attack}</div></div><div class="stat-box"><div class="stat-label">🛡️ Defence</div><div class="stat-value">${stats.defence}</div></div></div><p><strong>Level:</strong> ${formatNum(state.level)} | <strong>Prestige:</strong> ${formatNum(state.prestigeOwned)}</p><p>⭐ EXP: ${formatNum(state.exp)}/${formatNum(state.expToNextLevel)}</p><p>🦴 Bones: ${formatNum(state.bones)}</p><p>⚡ Tap: ${formatNum(state.tapPower)} | 🕒 Auto: ${formatNum(state.autoCollector)}/s</p><p>🌟 Total Multiplier: x${tm} (Prestige: +${state.prestigeOwned}x | Shop: +${formatNum(state.shopMultiplierOwned)}x)</p><button id="downloadSaveBtn" style="margin-top:10px;width:100%;">💾 Download Save</button><button id="logoutBtn" class="logout-btn" style="margin-top:8px;width:100%;">🚪 Logout</button></div>`; document.getElementById('downloadSaveBtn').addEventListener('click',downloadSaveFile); document.getElementById('logoutBtn').addEventListener('click',logout); }
-
     function renderUpgradesTab(){ const c=document.getElementById('tabContent');if(!c)return; const tc=getTapPowerCost(),ac=getAutoCollectorCost(),mt=calculateMaxTapUpgrades(),ma=calculateMaxAutoUpgrades(); c.innerHTML=`<div class="upgrade-item"><div class="upgrade-info"><span>💪 Tap Power +1</span><span>Cost: ${formatNum(tc)} 🦴</span></div><p class="next-cost">Owned: ${formatNum(state.tapPowerOwned)} | Max: ${mt.count} (${formatNum(mt.totalCost)} 🦴)</p><div class="upgrade-buttons"><button id="upgradeTapBtn">Buy 1</button><button id="maxTapBtn" class="max-buy-btn">Max (${mt.count})</button></div></div><div class="upgrade-item"><div class="upgrade-info"><span>🕒 Auto Collector +1/s</span><span>Cost: ${formatNum(ac)} 🦴</span></div><p class="next-cost">Owned: ${formatNum(state.autoCollectorOwned)} | Max: ${ma.count} (${formatNum(ma.totalCost)} 🦴)</p><div class="upgrade-buttons"><button id="upgradeAutoBtn">Buy 1</button><button id="maxAutoBtn" class="max-buy-btn">Max (${ma.count})</button></div></div><p style="color:#ccc;margin-top:10px;">Tap: ${formatNum(state.tapPower)} | Auto: ${formatNum(state.autoCollector)}/s | 🦴 ${formatNum(state.bones)}</p>`; document.getElementById('upgradeTapBtn').addEventListener('click',()=>{const p=getTapPowerCost();if(state.bones>=p){state.bones-=p;state.tapPowerOwned++;state.tapPower++;updateBoneDisplay();renderUpgradesTab();}else alert('Not enough!');}); document.getElementById('maxTapBtn').addEventListener('click',()=>{const m=calculateMaxTapUpgrades();if(m.count>0){state.bones-=m.totalCost;state.tapPowerOwned+=m.count;state.tapPower+=m.count;updateBoneDisplay();renderUpgradesTab();}else alert('Not enough!');}); document.getElementById('upgradeAutoBtn').addEventListener('click',()=>{const p=getAutoCollectorCost();if(state.bones>=p){state.bones-=p;state.autoCollectorOwned++;state.autoCollector++;updateBoneDisplay();renderUpgradesTab();}else alert('Not enough!');}); document.getElementById('maxAutoBtn').addEventListener('click',()=>{const m=calculateMaxAutoUpgrades();if(m.count>0){state.bones-=m.totalCost;state.autoCollectorOwned+=m.count;state.autoCollector+=m.count;updateBoneDisplay();renderUpgradesTab();}else alert('Not enough!');}); }
-
     function renderPrestigeTab(){ const c=document.getElementById('tabContent');if(!c)return; const nc=getNextPrestigeCost(),mp=calculateMaxPrestiges(),cam=mp.count>0?getPrestigeCost(state.prestigeOwned+mp.count):nc,tm=getTotalMultiplier(),mam=tm+mp.count; c.innerHTML=`<div class="prestige-item"><div class="prestige-info"><span>🌟 Prestige</span><span>Next: ${formatNum(nc)} 🦴</span></div><p class="next-cost">Owned: ${formatNum(state.prestigeOwned)} | Max: ${mp.count} (${formatNum(mp.totalCost)} 🦴)</p><p class="next-cost">Multiplier: x${tm}</p>${mp.count>0?`<p class="cost-breakdown">After max: ${formatNum(state.prestigeOwned+mp.count)} owned | x${mam} | Next: ${formatNum(cam)} 🦴</p>`:''}<div class="prestige-buttons"><button id="maxPrestigeBtn" class="max-buy-btn" ${mp.count===0?'disabled':''}>Max (${mp.count})</button></div>${mp.count===0?`<p style="color:#f44;font-size:0.8rem;margin-top:5px;">Need ${formatNum(nc-state.bones)} more 🦴</p>`:''}</div><p style="color:#ccc;margin-top:10px;">Resets level & upgrades. Keeps multipliers & stats.</p><p style="color:#ffd700;font-size:0.8rem;">+1x multiplier, +1 stats per prestige!</p>`; document.getElementById('maxPrestigeBtn').addEventListener('click',()=>{const m=calculateMaxPrestiges();if(m.count>0){state.bones-=m.totalCost;for(let i=0;i<m.count;i++)performPrestige();updateBoneDisplay();updateExpBar();updatePrestigeUnderTapper();saveCurrentProfile();renderPrestigeTab();alert(`Done! ${m.count} prestiges. x${getTotalMultiplier()}`);}}); }
-
-    function renderShopTab(){
-      const c=document.getElementById('tabContent');if(!c)return;
-      let h=`<div style="color:#fff;"><h3 style="color:#ffd700;margin-bottom:5px;">🛒 Shop</h3><div class="polygon-rate">🔷 Real Polygon Payments • Verify on Blockchain</div><p style="color:#ccc;font-size:0.8rem;margin-bottom:10px;">Send POL to the address shown, then paste your transaction hash.</p>`;
-      state.shopTiers.forEach((tier,i)=>{
-        const pc=state.tierPurchases[tier.id]||0,total=pc*tier.multiplier,bv=i===4,feat=i===2;
-        let cls='shop-tier';if(bv)cls+=' best-value';else if(feat)cls+=' featured';
-        h+=`<div class="${cls}">${bv?'<div class="best-value-badge">BEST VALUE</div>':(feat?'<div class="tier-badge">POPULAR</div>':'')}<div class="tier-header">T${tier.id}: ${tier.name}</div><div class="tier-multiplier">+x${tier.multiplier}</div><div class="tier-price">£${tier.price.toFixed(2)}</div><div class="tier-polygon-price">🔷 ${gbpToPolygon(tier.price)} POL</div>${pc>0?`<div class="tier-owned-count">📦 ${pc}x | Total: +${total}x</div>`:''}<div class="tier-value">${tier.value}</div><button class="buy-tier-btn" id="buyTier${tier.id}">🔷 Pay with POL</button><div class="payment-options"><button class="payment-btn polygon-btn" id="polygonBtn${tier.id}">🔷 POL</button><button class="payment-btn" id="paypalBtn${tier.id}">💰 PayPal</button></div></div>`;
-      });
-      h+=`<p style="color:#888;font-size:0.7rem;margin-top:10px;text-align:center;">🔒 Real blockchain verification • Polygon Network</p></div>`;
-      c.innerHTML=h;
-      state.shopTiers.forEach(tier=>{
-        document.getElementById('polygonBtn'+tier.id)?.addEventListener('click',()=>showPaymentModal(tier.id));
-        document.getElementById('paypalBtn'+tier.id)?.addEventListener('click',()=>showPaypalModal(tier.id));
-        document.getElementById('buyTier'+tier.id)?.addEventListener('click',()=>showPaymentModal(tier.id));
-      });
-    }
+    function renderShopTab(){ const c=document.getElementById('tabContent');if(!c)return; let h=`<div style="color:#fff;"><h3 style="color:#ffd700;margin-bottom:5px;">🛒 Shop</h3><div class="polygon-rate">🔷 Real Polygon Payments • Verify on Blockchain</div><p style="color:#ccc;font-size:0.8rem;margin-bottom:10px;">Send POL to the address shown, then paste your transaction hash.</p>`; state.shopTiers.forEach((tier,i)=>{ const pc=state.tierPurchases[tier.id]||0,total=pc*tier.multiplier,bv=i===4,feat=i===2; let cls='shop-tier';if(bv)cls+=' best-value';else if(feat)cls+=' featured'; h+=`<div class="${cls}">${bv?'<div class="best-value-badge">BEST VALUE</div>':(feat?'<div class="tier-badge">POPULAR</div>':'')}<div class="tier-header">T${tier.id}: ${tier.name}</div><div class="tier-multiplier">+x${tier.multiplier}</div><div class="tier-price">£${tier.price.toFixed(2)}</div><div class="tier-polygon-price">🔷 ${gbpToPolygon(tier.price)} POL</div>${pc>0?`<div class="tier-owned-count">📦 ${pc}x | Total: +${total}x</div>`:''}<div class="tier-value">${tier.value}</div><button class="buy-tier-btn" id="buyTier${tier.id}">🔷 Pay with POL</button><div class="payment-options"><button class="payment-btn polygon-btn" id="polygonBtn${tier.id}">🔷 POL</button><button class="payment-btn" id="paypalBtn${tier.id}">💰 PayPal</button></div></div>`; }); h+=`<p style="color:#888;font-size:0.7rem;margin-top:10px;text-align:center;">🔒 Real blockchain verification • Polygon Network</p></div>`; c.innerHTML=h; state.shopTiers.forEach(tier=>{ document.getElementById('polygonBtn'+tier.id)?.addEventListener('click',()=>showPaymentModal(tier.id)); document.getElementById('paypalBtn'+tier.id)?.addEventListener('click',()=>showPaypalModal(tier.id)); document.getElementById('buyTier'+tier.id)?.addEventListener('click',()=>showPaymentModal(tier.id)); }); }
 
     const appDiv=document.getElementById('app');
     document.getElementById('importFileInput').addEventListener('change',handleFileImport);
