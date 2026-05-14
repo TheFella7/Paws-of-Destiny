@@ -193,9 +193,6 @@
       cursor: pointer;
       border-bottom: 3px solid #666666;
     }
-    .import-btn:hover {
-      background: #555555;
-    }
 
     .tap-area {
       background: transparent;
@@ -214,323 +211,84 @@
       -webkit-user-select: none;
       outline: none;
     }
-    .tap-area:active,
-    .tap-area:focus,
-    .tap-area:focus-visible {
-      outline: none;
-      background: transparent;
-      -webkit-tap-highlight-color: transparent;
+    .tap-area.akita-tapper {
+      width: 220px;
+      height: 220px;
     }
+    .tap-area:active, .tap-area:focus, .tap-area:focus-visible { outline: none; background: transparent; -webkit-tap-highlight-color: transparent; }
     .tap-gif {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
       border-radius: 0;
       pointer-events: none;
     }
-
-    .level-container {
-      margin: 0 auto 16px;
-      max-width: 300px;
-      text-align: center;
+    .tap-gif.akita-gif {
+      object-fit: contain;
+      padding: 10px;
     }
-    .level-display {
+
+    .level-container { margin: 0 auto 10px; max-width: 300px; text-align: center; }
+    .level-display { color: #ffd700; font-weight: bold; font-size: 0.9rem; margin-bottom: 4px; }
+    .exp-bar-bg { background: #111111; height: 12px; border-radius: 6px; overflow: hidden; border: 1px solid #333333; margin-bottom: 2px; }
+    .exp-bar-fill { height: 100%; border-radius: 6px; background: linear-gradient(90deg, #ffd700, #ffaa00); transition: width 0.3s ease; }
+    .exp-text { color: #888888; font-size: 0.7rem; }
+
+    .prestige-under-tapper {
+      text-align: center;
+      margin: 4px 0 8px;
       color: #ffd700;
       font-weight: bold;
-      font-size: 0.9rem;
-      margin-bottom: 4px;
-    }
-    .exp-bar-bg {
-      background: #111111;
-      height: 12px;
-      border-radius: 6px;
-      overflow: hidden;
-      border: 1px solid #333333;
-      margin-bottom: 2px;
-    }
-    .exp-bar-fill {
-      height: 100%;
-      border-radius: 6px;
-      background: linear-gradient(90deg, #ffd700, #ffaa00);
-      transition: width 0.3s ease;
-    }
-    .exp-text {
-      color: #888888;
-      font-size: 0.7rem;
+      font-size: 0.85rem;
     }
 
-    .stat-row {
-      display: flex;
-      justify-content: space-between;
-      color: #ffffff;
-      font-weight: bold;
-      margin: 8px 0;
-    }
+    .stat-row { display: flex; justify-content: space-between; color: #ffffff; font-weight: bold; margin: 8px 0; }
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 8px 0; }
+    .stat-box { background: #0a0a0a; border-radius: 10px; padding: 8px; text-align: center; border: 1px solid #222222; }
+    .stat-box .stat-label { font-size: 0.7rem; color: #888888; }
+    .stat-box .stat-value { font-size: 1rem; font-weight: bold; color: #ffd700; }
 
-    .stats-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px;
-      margin: 8px 0;
-    }
-    .stat-box {
-      background: #0a0a0a;
-      border-radius: 10px;
-      padding: 8px;
-      text-align: center;
-      border: 1px solid #222222;
-    }
-    .stat-box .stat-label {
-      font-size: 0.7rem;
-      color: #888888;
-    }
-    .stat-box .stat-value {
-      font-size: 1rem;
-      font-weight: bold;
-      color: #ffd700;
-    }
+    .tab-row { display: flex; gap: 6px; margin-top: 14px; }
+    .tab { flex: 1; background: #0a0a0a; padding: 10px 4px; text-align: center; border-radius: 20px 20px 0 0; font-weight: bold; color: #888888; cursor: pointer; border: 1px solid #222222; border-bottom: none; font-size: 0.7rem; }
+    .tab.active { background: #000000; color: #ffd700; border-bottom: 2px solid #ffd700; }
 
-    .tab-row {
-      display: flex;
-      gap: 6px;
-      margin-top: 14px;
-    }
-    .tab {
-      flex: 1;
-      background: #0a0a0a;
-      padding: 10px 4px;
-      text-align: center;
-      border-radius: 20px 20px 0 0;
-      font-weight: bold;
-      color: #888888;
-      cursor: pointer;
-      border: 1px solid #222222;
-      border-bottom: none;
-      font-size: 0.7rem;
-    }
-    .tab.active {
-      background: #000000;
-      color: #ffd700;
-      border-bottom: 2px solid #ffd700;
-    }
-
-    .upgrade-item, .prestige-item {
-      background: #0a0a0a;
-      border-radius: 20px;
-      padding: 12px;
-      margin: 10px 0;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      border: 1px solid #222222;
-      color: #ffffff;
-    }
-    .upgrade-info, .prestige-info {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .upgrade-buttons, .prestige-buttons {
-      display: flex;
-      gap: 8px;
-    }
-    .upgrade-buttons button, .prestige-buttons button {
-      flex: 1;
-      font-size: 0.75rem;
-      padding: 8px 10px;
-    }
-    .max-buy-btn {
-      background: #ffd700;
-      color: #000000;
-      border-bottom-color: #cc9900;
-    }
-    .max-buy-btn:hover {
-      background: #ffed4a;
-    }
-    button {
-      background: #222222;
-      border: none;
-      color: #ffffff;
-      font-weight: bold;
-      padding: 10px 16px;
-      border-radius: 30px;
-      cursor: pointer;
-      border-bottom: 3px solid #444444;
-    }
+    .upgrade-item, .prestige-item { background: #0a0a0a; border-radius: 20px; padding: 12px; margin: 10px 0; display: flex; flex-direction: column; gap: 8px; border: 1px solid #222222; color: #ffffff; }
+    .upgrade-info, .prestige-info { display: flex; justify-content: space-between; align-items: center; }
+    .upgrade-buttons, .prestige-buttons { display: flex; gap: 8px; }
+    .upgrade-buttons button, .prestige-buttons button { flex: 1; font-size: 0.75rem; padding: 8px 10px; }
+    .max-buy-btn { background: #ffd700; color: #000000; border-bottom-color: #cc9900; }
+    button { background: #222222; border: none; color: #ffffff; font-weight: bold; padding: 10px 16px; border-radius: 30px; cursor: pointer; border-bottom: 3px solid #444444; }
     button:hover { background: #333333; }
-    button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    /* Shop tier cards */
-    .shop-tier {
-      background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
-      border-radius: 20px;
-      padding: 16px;
-      margin: 10px 0;
-      border: 1px solid #333333;
-      color: #ffffff;
-      position: relative;
-      overflow: hidden;
-    }
-    .shop-tier.featured {
-      border: 2px solid #ffd700;
-      box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-    }
-    .shop-tier.best-value {
-      border: 2px solid #ffd700;
-      box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
-      background: linear-gradient(145deg, #222200, #0a0a00);
-    }
-    .tier-badge {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: #ffd700;
-      color: #000000;
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 0.7rem;
-      font-weight: bold;
-    }
-    .best-value-badge {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: #ffd700;
-      color: #000000;
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 0.7rem;
-      font-weight: bold;
-      animation: glow 2s ease-in-out infinite;
-    }
-    @keyframes glow {
-      0%, 100% { box-shadow: 0 0 5px #ffd700; }
-      50% { box-shadow: 0 0 20px #ffd700; }
-    }
-    .tier-header {
-      font-size: 1.1rem;
-      font-weight: bold;
-      color: #ffd700;
-      margin-bottom: 4px;
-    }
-    .tier-multiplier {
-      font-size: 1.4rem;
-      font-weight: bold;
-      color: #ffffff;
-    }
-    .tier-price {
-      font-size: 1.1rem;
-      color: #ffd700;
-      margin: 4px 0;
-    }
-    .tier-polygon-price {
-      font-size: 0.9rem;
-      color: #8247e5;
-      margin-bottom: 4px;
-      font-weight: bold;
-    }
-    .tier-owned-count {
-      font-size: 0.8rem;
-      color: #ffd700;
-      margin-bottom: 4px;
-    }
-    .tier-value {
-      font-size: 0.75rem;
-      color: #888888;
-      margin-bottom: 8px;
-    }
-    .polygon-rate {
-      font-size: 0.7rem;
-      color: #8247e5;
-      margin-bottom: 6px;
-    }
-    .buy-tier-btn {
-      width: 100%;
-      background: #ffd700;
-      color: #000000;
-      font-weight: bold;
-      padding: 12px;
-      border-radius: 25px;
-      border: none;
-      cursor: pointer;
-      border-bottom: 3px solid #cc9900;
-      font-size: 0.9rem;
-    }
-    .buy-tier-btn:hover {
-      background: #ffed4a;
-    }
-    .payment-options {
-      display: flex;
-      gap: 6px;
-      margin-top: 6px;
-    }
-    .payment-btn {
-      flex: 1;
-      font-size: 0.7rem;
-      padding: 8px 6px;
-      background: #333333;
-      border-radius: 15px;
-      border: none;
-      color: #ffffff;
-      cursor: pointer;
-      border-bottom: 2px solid #555555;
-    }
-    .payment-btn.polygon-btn {
-      background: #8247e5;
-      border-bottom-color: #6a3ab5;
-    }
-    .payment-btn.polygon-btn:hover {
-      background: #9b5df0;
-    }
-    .payment-btn:hover {
-      background: #444444;
-    }
+    .shop-tier { background: linear-gradient(145deg, #1a1a1a, #0a0a0a); border-radius: 20px; padding: 16px; margin: 10px 0; border: 1px solid #333333; color: #ffffff; position: relative; overflow: hidden; }
+    .shop-tier.featured { border: 2px solid #ffd700; box-shadow: 0 0 20px rgba(255,215,0,0.3); }
+    .shop-tier.best-value { border: 2px solid #ffd700; box-shadow: 0 0 30px rgba(255,215,0,0.5); background: linear-gradient(145deg, #222200, #0a0a00); }
+    .tier-badge { position: absolute; top: 10px; right: 10px; background: #ffd700; color: #000; padding: 4px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: bold; }
+    .best-value-badge { position: absolute; top: 10px; right: 10px; background: #ffd700; color: #000; padding: 4px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: bold; animation: glow 2s ease-in-out infinite; }
+    @keyframes glow { 0%,100%{box-shadow:0 0 5px #ffd700} 50%{box-shadow:0 0 20px #ffd700} }
+    .tier-header { font-size: 1.1rem; font-weight: bold; color: #ffd700; margin-bottom: 4px; }
+    .tier-multiplier { font-size: 1.4rem; font-weight: bold; color: #ffffff; }
+    .tier-price { font-size: 1.1rem; color: #ffd700; margin: 4px 0; }
+    .tier-polygon-price { font-size: 0.9rem; color: #8247e5; margin-bottom: 4px; font-weight: bold; }
+    .tier-owned-count { font-size: 0.8rem; color: #ffd700; margin-bottom: 4px; }
+    .tier-value { font-size: 0.75rem; color: #888888; margin-bottom: 8px; }
+    .polygon-rate { font-size: 0.7rem; color: #8247e5; margin-bottom: 6px; }
+    .buy-tier-btn { width: 100%; background: #ffd700; color: #000; font-weight: bold; padding: 12px; border-radius: 25px; border: none; cursor: pointer; border-bottom: 3px solid #cc9900; font-size: 0.9rem; }
+    .payment-options { display: flex; gap: 6px; margin-top: 6px; }
+    .payment-btn { flex: 1; font-size: 0.7rem; padding: 8px 6px; background: #333; border-radius: 15px; border: none; color: #fff; cursor: pointer; border-bottom: 2px solid #555; }
+    .payment-btn.polygon-btn { background: #8247e5; border-bottom-color: #6a3ab5; }
 
-    .save-slot {
-      background: #0a0a0a;
-      border-radius: 16px;
-      padding: 14px;
-      margin: 10px 0;
-      border: 1px solid #333333;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .save-slot:hover {
-      border-color: #ffd700;
-      background: #111111;
-    }
-    .save-slot h4 {
-      color: #ffd700;
-      margin-bottom: 4px;
-    }
-    .save-slot p {
-      color: #888888;
-      font-size: 0.8rem;
-    }
-    .logout-btn {
-      background: #8b0000;
-      border-bottom-color: #ff0000;
-      margin-top: 5px;
-    }
-    .logout-btn:hover { background: #a00000; }
+    .save-slot { background: #0a0a0a; border-radius: 16px; padding: 14px; margin: 10px 0; border: 1px solid #333; cursor: pointer; transition: all 0.2s; }
+    .save-slot:hover { border-color: #ffd700; background: #111; }
+    .save-slot h4 { color: #ffd700; margin-bottom: 4px; }
+    .save-slot p { color: #888; font-size: 0.8rem; }
+    .logout-btn { background: #8b0000; border-bottom-color: #f00; margin-top: 5px; }
 
     h3, p { color: #ffffff; }
-    .next-cost {
-      font-size: 0.75rem;
-      color: #888888;
-    }
-    .cost-breakdown {
-      font-size: 0.7rem;
-      color: #ffd700;
-      margin-top: 4px;
-    }
-
-    #importFileInput {
-      display: none;
-    }
+    .next-cost { font-size: 0.75rem; color: #888; }
+    .cost-breakdown { font-size: 0.7rem; color: #ffd700; margin-top: 4px; }
+    #importFileInput { display: none; }
   </style>
 </head>
 <body>
@@ -539,23 +297,15 @@
 
 <script>
   (function() {
-    // ============ NUMBER FORMATTING SYSTEM ============
-    
-    const suffixes = [
-      '', 'k', 'm', 'b', 't', 'aa', 'ab', 'ac', 'ad', 'ae', 'af', 'ag', 'ah', 'ai', 'aj', 'ak', 'al', 'am', 'an', 'ao', 'ap', 'aq', 'ar', 'as', 'at', 'au', 'av', 'aw', 'ax', 'ay', 'az',
-      'ba', 'bb', 'bc', 'bd', 'be', 'bf', 'bg', 'bh', 'bi', 'bj', 'bk', 'bl', 'bm', 'bn', 'bo', 'bp', 'bq', 'br', 'bs', 'bt', 'bu', 'bv', 'bw', 'bx', 'by', 'bz',
-      'ca', 'cb', 'cc', 'cd', 'ce', 'cf', 'cg', 'ch', 'ci', 'cj', 'ck', 'cl', 'cm', 'cn', 'co', 'cp', 'cq', 'cr', 'cs', 'ct', 'cu', 'cv', 'cw', 'cx', 'cy', 'cz'
-    ];
-    
+    const suffixes = ['','k','m','b','t','aa','ab','ac','ad','ae','af','ag','ah','ai','aj','ak','al','am','an','ao','ap','aq','ar','as','at','au','av','aw','ax','ay','az','ba','bb','bc','bd','be','bf','bg','bh','bi','bj','bk','bl','bm','bn','bo','bp','bq','br','bs','bt','bu','bv','bw','bx','by','bz','ca','cb','cc','cd','ce','cf','cg','ch','ci','cj','ck','cl','cm','cn','co','cp','cq','cr','cs','ct','cu','cv','cw','cx','cy','cz'];
     function formatNum(num) {
       if (num < 0) return '0';
       if (num < 1000) return Math.floor(num).toString();
       let tier = 0, value = num;
       while (value >= 1000 && tier < suffixes.length - 1) { value /= 1000; tier++; }
       if (tier >= suffixes.length) {
-        const extraTiers = tier - suffixes.length + 1;
-        const firstLetter = Math.floor(extraTiers / 26), secondLetter = extraTiers % 26;
-        return value.toFixed(2).replace(/\.?0+$/, '') + String.fromCharCode(97 + firstLetter) + String.fromCharCode(97 + secondLetter);
+        const extra = tier - suffixes.length + 1;
+        return value.toFixed(2).replace(/\.?0+$/, '') + String.fromCharCode(97 + Math.floor(extra/26)) + String.fromCharCode(97 + (extra%26));
       }
       return value.toFixed(2).replace(/\.?0+$/, '') + suffixes[tier];
     }
@@ -590,37 +340,16 @@
         'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-054649%7E2.png'
       ],
       breedTapImages: {
-        'Staffordshire Bull Terrier': [
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-062822%7E3.png',
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-062836%7E2.png',
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-062846%7E2.png',
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-062914%7E2.png',
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-062934%7E2.png',
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-063013%7E2.png'
-        ],
-        'American PitBull': [
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-111127%7E2.png',
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-111205%7E2.png',
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-111212%7E2.png',
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-111315%7E2.png',
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-111344%7E2.png',
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-111408%7E2.png'
-        ],
-        'American Bulldog': [
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-115657%7E3.png',
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-115959%7E2.png',
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-120214%7E2.png',
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-120228%7E2.png',
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-120237%7E2.png',
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-120350%7E2.png'
-        ],
-        'Cane Corso': [
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-134601%7E2.png',
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-134617%7E2.png',
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-134621%7E2.png',
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-134730%7E2.png',
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-134740%7E2.png',
-          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-134753%7E2.png'
+        'Staffordshire Bull Terrier': ['Screenshot_20260514-062822~3.png','Screenshot_20260514-062836~2.png','Screenshot_20260514-062846~2.png','Screenshot_20260514-062914~2.png','Screenshot_20260514-062934~2.png','Screenshot_20260514-063013~2.png'].map(f=>'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/'+f),
+        'American PitBull': ['Screenshot_20260514-111127~2.png','Screenshot_20260514-111205~2.png','Screenshot_20260514-111212~2.png','Screenshot_20260514-111315~2.png','Screenshot_20260514-111344~2.png','Screenshot_20260514-111408~2.png'].map(f=>'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/'+f),
+        'American Bulldog': ['Screenshot_20260514-115657~3.png','Screenshot_20260514-115959~2.png','Screenshot_20260514-120214~2.png','Screenshot_20260514-120228~2.png','Screenshot_20260514-120237~2.png','Screenshot_20260514-120350~2.png'].map(f=>'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/'+f),
+        'Cane Corso': ['Screenshot_20260514-134601~2.png','Screenshot_20260514-134617~2.png','Screenshot_20260514-134621~2.png','Screenshot_20260514-134730~2.png','Screenshot_20260514-134740~2.png','Screenshot_20260514-134753~2.png'].map(f=>'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/'+f),
+        'Japanese Akita': [
+          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-144213%7E3.png',
+          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-144154%7E2.png',
+          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-144013%7E2.png',
+          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-144027%7E2.png',
+          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-143958%7E2.png'
         ]
       },
       breedImages: {
@@ -628,7 +357,8 @@
         'XL Bully': { url: 'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-044808%7E3.png', position: 'center 35%' },
         'American PitBull': { url: 'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-110631%7E2.png', position: 'center 35%' },
         'American Bulldog': { url: 'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-115556%7E3.png', position: 'center 35%' },
-        'Cane Corso': { url: 'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/file_0000000001907246b79913b041113f34%7E2.png', position: 'center 35%' }
+        'Cane Corso': { url: 'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/file_0000000001907246b79913b041113f34%7E2.png', position: 'center 35%' },
+        'Japanese Akita': { url: 'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/file_00000000340c71f4b8e56955c28fa581.png', position: 'center 35%' }
       },
       breedOptions: [
         'Staffordshire Bull Terrier', 'American PitBull', 'American Bulldog',
@@ -793,6 +523,10 @@
       if(et) et.textContent=`${formatNum(state.exp)} / ${formatNum(state.expToNextLevel)} EXP`;
       if(ld) ld.textContent=`⭐ Level ${formatNum(state.level)}`;
     }
+    function updatePrestigeUnderTapper() {
+      const el = document.getElementById('prestigeUnderTapper');
+      if (el) el.textContent = `⭐ Prestige ${formatNum(state.prestigeOwned)} owned`;
+    }
 
     // ============ RENDER ============
     function renderLoginScreen() {
@@ -827,8 +561,11 @@
     }
 
     function renderMainGame() {
-      const imgs=getTapImages(),cur=imgs[state.currentTapImage],tm=getTotalMultiplier();
-      let h=`<div class="title-banner"><img src="${state.titleBannerUrl}" alt="Paws of Destiny"/></div><div class="game-header"><h2>🐕 ${state.playerName}</h2><div class="resource-badge">🦴 <span id="boneDisplay">${formatNum(state.bones)}</span></div></div><div class="screen active" id="mainScreen"><div class="tap-area" id="tapDog"><img src="${cur}" alt="Tap" class="tap-gif" id="tapGif"/></div><div class="level-container"><div class="level-display" id="levelDisplay">⭐ Level ${formatNum(state.level)}</div><div class="exp-bar-bg"><div class="exp-bar-fill" id="expFill" style="width:${(state.exp/state.expToNextLevel)*100}%;"></div></div><div class="exp-text" id="expText">${formatNum(state.exp)} / ${formatNum(state.expToNextLevel)} EXP (x${tm})</div></div><div class="stat-row"><span>${state.breed}</span><span>⭐ Prestige ${formatNum(state.prestigeOwned)}</span></div><div class="tab-row"><div class="tab active" data-tab="profile">🐶 Profile</div><div class="tab" data-tab="upgrades">📈 Upgrades</div><div class="tab" data-tab="prestige">🌟 Prestige</div><div class="tab" data-tab="shop">🛒 Shop</div></div><div id="tabContent"></div></div>`;
+      const imgs=getTapImages(),cur=imgs[Math.min(state.currentTapImage, imgs.length-1)],tm=getTotalMultiplier();
+      const isAkita = state.breed === 'Japanese Akita';
+      const tapperClass = isAkita ? 'tap-area akita-tapper' : 'tap-area';
+      const gifClass = isAkita ? 'tap-gif akita-gif' : 'tap-gif';
+      let h=`<div class="title-banner"><img src="${state.titleBannerUrl}" alt="Paws of Destiny"/></div><div class="game-header"><h2>🐕 ${state.playerName}</h2><div class="resource-badge">🦴 <span id="boneDisplay">${formatNum(state.bones)}</span></div></div><div class="screen active" id="mainScreen"><div class="${tapperClass}" id="tapDog"><img src="${cur}" alt="Tap" class="${gifClass}" id="tapGif"/></div><div class="level-container"><div class="level-display" id="levelDisplay">⭐ Level ${formatNum(state.level)}</div><div class="exp-bar-bg"><div class="exp-bar-fill" id="expFill" style="width:${(state.exp/state.expToNextLevel)*100}%;"></div></div><div class="exp-text" id="expText">${formatNum(state.exp)} / ${formatNum(state.expToNextLevel)} EXP (x${tm})</div></div><div class="prestige-under-tapper" id="prestigeUnderTapper">⭐ Prestige ${formatNum(state.prestigeOwned)} owned</div><div class="stat-row"><span>${state.breed}</span></div><div class="tab-row"><div class="tab active" data-tab="profile">🐶 Profile</div><div class="tab" data-tab="upgrades">📈 Upgrades</div><div class="tab" data-tab="prestige">🌟 Prestige</div><div class="tab" data-tab="shop">🛒 Shop</div></div><div id="tabContent"></div></div>`;
       appDiv.innerHTML=h;
       document.getElementById('tapDog').addEventListener('click',handleTap);
       attachTabEvents();renderProfileTab();startAutoCollector();
@@ -864,7 +601,7 @@
       const c=document.getElementById('tabContent');if(!c)return;
       const nc=getNextPrestigeCost(),mp=calculateMaxPrestiges(),cam=mp.count>0?getPrestigeCost(state.prestigeOwned+mp.count):nc,tm=getTotalMultiplier(),mam=tm+mp.count;
       c.innerHTML=`<div class="prestige-item"><div class="prestige-info"><span>🌟 Prestige</span><span>Next: ${formatNum(nc)} 🦴</span></div><p class="next-cost">Owned: ${formatNum(state.prestigeOwned)} | Max: ${mp.count} (${formatNum(mp.totalCost)} 🦴)</p><p class="next-cost">Multiplier: x${tm}</p>${mp.count>0?`<p class="cost-breakdown">After max: ${formatNum(state.prestigeOwned+mp.count)} owned | x${mam} | Next: ${formatNum(cam)} 🦴</p>`:''}<div class="prestige-buttons"><button id="maxPrestigeBtn" class="max-buy-btn" ${mp.count===0?'disabled':''}>Max (${mp.count})</button></div>${mp.count===0?`<p style="color:#f44;font-size:0.8rem;margin-top:5px;">Need ${formatNum(nc-state.bones)} more 🦴</p>`:''}</div><p style="color:#ccc;margin-top:10px;">Resets level & upgrades. Keeps multipliers & stats.</p><p style="color:#ffd700;font-size:0.8rem;">+1x multiplier, +1 stats per prestige!</p>`;
-      document.getElementById('maxPrestigeBtn').addEventListener('click',()=>{const m=calculateMaxPrestiges();if(m.count>0){state.bones-=m.totalCost;for(let i=0;i<m.count;i++)performPrestige();updateBoneDisplay();updateExpBar();saveCurrentProfile();renderPrestigeTab();alert(`Done! ${m.count} prestiges. x${getTotalMultiplier()}`);}});
+      document.getElementById('maxPrestigeBtn').addEventListener('click',()=>{const m=calculateMaxPrestiges();if(m.count>0){state.bones-=m.totalCost;for(let i=0;i<m.count;i++)performPrestige();updateBoneDisplay();updateExpBar();updatePrestigeUnderTapper();saveCurrentProfile();renderPrestigeTab();alert(`Done! ${m.count} prestiges. x${getTotalMultiplier()}`);}});
     }
 
     function renderShopTab(){
