@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Paws of Destiny · Idle Dog RPG</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', 'Arial', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(145deg, #1e2b1a 0%, #0f140d 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px;
+    }
+
+    .game-container {
+      max-width: 500px;
+      width: 100%;
+      background: #1f231d;
+      border-radius: 38px;
+      box-shadow: 0 25px 45px rgba(0,0,0,0.8), 0 0 0 2px #5b6b44;
+      overflow: hidden;
+      border: 1px solid #6f8252;
+    }
+
+    .game-header {
+      background: #232b1e;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid #7b8c4a;
+    }
+    .game-header h2 {
+      color: #f3e2b5;
+      font-weight: 800;
+      letter-spacing: 2px;
+      font-size: 1.4rem;
+      text-shadow: 0 2px 4px black;
+    }
+    .resource-badge {
+      background: #0e100c;
+      padding: 6px 16px;
+      border-radius: 30px;
+      color: #ddb65e;
+      font-weight: bold;
+      border: 1px solid #6a7942;
+    }
+
+    .screen {
+      display: none;
+      padding: 16px;
+      background: #1e221b;
+      min-height: 500px;
+    }
+    .screen.active {
+      display: block;
+    }
+
+    /* Updated breed grid for square images */
+    .breed-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 15px;
+    }
+    .breed-card {
+      background: #282f23;
+      border-radius: 24px;
+      padding: 12px;
+      text-align: center;
+      border: 2px solid #4b5a38;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: #d4c098;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .breed-card.selected {
+      border: 3px solid #e5b83c;
+      background: #353f2c;
+      box-shadow: 0 0 18px #c9a135;
+    }
+    
+    /* SQUARE image placeholder */
+    .breed-img-placeholder {
+      width: 100%;
+      aspect-ratio: 1 / 1; /* This makes it perfectly square */
+      background: #3a4530;
+      border-radius: 16px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #9b9e7e;
+      font-size: 0.75rem;
+      background-size: cover;
+      background-position: center;
+      border: 1px dashed #7f8c5a;
+      overflow: hidden;
+    }
+    
+    /* If you add actual <img> tags later, they'll fit perfectly */
+    .breed-img-placeholder img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .breed-name {
+      font-weight: bold;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 14px;
+      border-radius: 30px;
+      border: 2px solid #5b6b3a;
+      background: #0f120d;
+      color: #f0e0b0;
+      font-weight: bold;
+      margin: 12px 0;
+      outline: none;
+      font-size: 1rem;
+    }
+    .start-btn {
+      background: #c99b2c;
+      border: none;
+      padding: 16px;
+      width: 100%;
+      border-radius: 40px;
+      font-weight: bold;
+      font-size: 1.2rem;
+      color: #1e1a0c;
+      margin-top: 10px;
+      cursor: pointer;
+      border-bottom: 4px solid #7a601e;
+    }
+
+    /* Tapper GIF area */
+    .tap-area {
+      background: #292f22;
+      border-radius: 50%;
+      width: 160px;
+      height: 160px;
+      margin: 20px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.8rem;
+      border: 4px solid #c9a443;
+      box-shadow: 0 0 30px #9b8122;
+      cursor: pointer;
+      transition: transform 0.1s;
+      user-select: none;
+      overflow: hidden;
+      position: relative;
+    }
+    .tap-area:active {
+      transform: scale(0.92);
+      background: #3f4a2e;
+    }
+    .tap-gif {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+    @keyframes tapPop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    .tap-animation {
+      animation: tapPop 0.2s ease-out;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      color: #ddcca6;
+      font-weight: bold;
+      margin: 8px 0;
+    }
+    .progress-bg {
+      background: #282e22;
+      height: 14px;
+      border-radius: 10px;
+      margin: 6px 0;
+      border: 1px solid #54633c;
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #dfa534, #f5cb5c);
+    }
+
+    .tab-row {
+      display: flex;
+      gap: 6px;
+      margin-top: 14px;
+    }
+    .tab {
+      flex: 1;
+      background: #2b3222;
+      padding: 10px 4px;
+      text-align: center;
+      border-radius: 20px 20px 0 0;
+      font-weight: bold;
+      color: #b8b085;
+      cursor: pointer;
+      border: 1px solid #4b5a38;
+      border-bottom: none;
+      font-size: 0.7rem;
+    }
+    .tab.active {
+      background: #1e221b;
+      color: #f7da7c;
+      border-bottom: 2px solid #e1a82b;
+    }
+
+    .upgrade-item {
+      background: #282f22;
+      border-radius: 20px;
+      padding: 12px;
+      margin: 10px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid #4b5937;
+    }
+    button {
+      background: #4b5e2e;
+      border: none;
+      color: white;
+      font-weight: bold;
+      padding: 10px 16px;
+      border-radius: 30px;
+      cursor: pointer;
+      border-bottom: 3px solid #2d3b1a;
+    }
+    .shop-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #252c1f;
+      padding: 12px;
+      border-radius: 18px;
+      margin: 8px 0;
+    }
+  </style>
+</head>
+<body>
+<div class="game-container" id="app">
+  <!-- dynamically filled -->
+</div>
+
+<script>
+  (function() {
+    const state = {
+      screen: 'setup',
+      playerName: '',
+      breed: '',
+      bones: 0,
+      totalTaps: 0,
+      prestigeCount: 0,
+      upgradeLevel: 1,
+      tapPower: 1,
+      autoCollector: 0,
+      prestigeMultiplier: 1,
+      tapGifUrl: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcjR5eGJ0b2ZqZ3J3eGZzZ2J0b2ZqZ3J3eGZzZ2J0b2ZqZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/3o7aTskHEUdgCQbKvC/giphy.gif',
+      breedOptions: [
+        'Staffordshire Bull Terrier',
+        'American PitBull',
+        'American Bulldog',
+        'XL Bully',
+        'Cane Corso',
+        'Japanese Akita',
+        'Doberman',
+        'Husky',
+        'Chihuahua',
+        'Jack Russell',
+        'Shih Tzu'
+      ]
+    };
+
+    const appDiv = document.getElementById('app');
+
+    function renderSetup() {
+      let html = `
+        <div class="screen active" id="setupScreen">
+          <h3 style="color:#e7cf8a; margin-bottom:10px;">🐾 Choose Your Destiny</h3>
+          <input class="input-field" id="nameInput" placeholder="Enter your dog's name" value="${state.playerName}" />
+          <p style="color:#b9aa7a; font-weight:bold;">Pick your breed:</p>
+          <div class="breed-grid" id="breedGrid">
+            ${state.breedOptions.map(breed => `
+              <div class="breed-card ${state.breed === breed ? 'selected' : ''}" data-breed="${breed}">
+                <!-- SQUARE placeholder - you can replace the text with an <img> tag -->
+                <div class="breed-img-placeholder" id="img-${breed.replace(/\s+/g,'')}">
+                  🖼️<br>add image
+                </div>
+                <div class="breed-name">${breed}</div>
+              </div>
+            `).join('')}
+          </div>
+          <button class="start-btn" id="startGameBtn">⚔️ Enter Paws of Destiny</button>
+        </div>
+      `;
+      appDiv.innerHTML = html;
+      attachSetupEvents();
+    }
+
+    function attachSetupEvents() {
+      document.getElementById('nameInput').addEventListener('input', (e) => {
+        state.playerName = e.target.value;
+      });
+      document.querySelectorAll('.breed-card').forEach(card => {
+        card.addEventListener('click', () => {
+          state.breed = card.dataset.breed;
+          renderSetup();
+        });
+      });
+      document.getElementById('startGameBtn').addEventListener('click', () => {
+        if (!state.playerName.trim()) {
+          alert('Please enter a name for your dog!');
+          return;
+        }
+        if (!state.breed) {
+          alert('Please select a breed!');
+          return;
+        }
+        state.screen = 'main';
+        renderMainGame();
+      });
+    }
+
+    function renderMainGame() {
+      let html = `
+        <div class="game-header">
+          <h2>🐕 ${state.playerName}</h2>
+          <div class="resource-badge">🦴 <span id="boneDisplay">${state.bones}</span></div>
+        </div>
+        <div class="screen active" id="mainScreen">
+          <div class="tap-area" id="tapDog">
+            <img src="${state.tapGifUrl}" alt="Tap Paw" class="tap-gif" id="tapGif" />
+          </div>
+          <div class="stat-row"><span>${state.breed}</span><span>⭐ Prestige ${state.prestigeCount}</span></div>
+          <div class="stat-row"><span>Total Taps:</span><span id="totalTaps">${state.totalTaps}</span></div>
+          <div class="progress-bg"><div class="progress-fill" id="xpBar" style="width:${Math.min(100, (state.bones%100))}%;"></div></div>
+
+          <div class="tab-row">
+            <div class="tab active" data-tab="profile">🐶 Profile</div>
+            <div class="tab" data-tab="upgrades">📈 Upgrades</div>
+            <div class="tab" data-tab="prestige">🌟 Prestige</div>
+            <div class="tab" data-tab="shop">🛒 Shop</div>
+          </div>
+          <div id="tabContent"></div>
+        </div>
+      `;
+      appDiv.innerHTML = html;
+      document.getElementById('tapDog').addEventListener('click', handleTap);
+      attachTabEvents();
+      renderProfileTab();
+      startAutoCollector();
+    }
+
+    function handleTap() {
+      let earned = state.tapPower * state.prestigeMultiplier;
+      state.bones += earned;
+      state.totalTaps++;
+      updateBoneDisplay();
+      
+      const gif = document.getElementById('tapGif');
+      if (gif) {
+        gif.classList.add('tap-animation');
+        setTimeout(() => gif.classList.remove('tap-animation'), 200);
+      }
+      
+      if (state.tabActive === 'profile') renderProfileTab();
+    }
+
+    function updateBoneDisplay() {
+      const bd = document.getElementById('boneDisplay');
+      if (bd) bd.textContent = state.bones;
+      const taps = document.getElementById('totalTaps');
+      if (taps) taps.textContent = state.totalTaps;
+    }
+
+    let autoInterval;
+    function startAutoCollector() {
+      if (autoInterval) clearInterval(autoInterval);
+      autoInterval = setInterval(() => {
+        if (state.autoCollector > 0) {
+          state.bones += state.autoCollector * state.prestigeMultiplier;
+          updateBoneDisplay();
+        }
+      }, 1000);
+    }
+
+    state.tabActive = 'profile';
+    function attachTabEvents() {
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          state.tabActive = tab.dataset.tab;
+          switch (state.tabActive) {
+            case 'profile': renderProfileTab(); break;
+            case 'upgrades': renderUpgradesTab(); break;
+            case 'prestige': renderPrestigeTab(); break;
+            case 'shop': renderShopTab(); break;
+          }
+        });
+      });
+    }
+
+    function renderProfileTab() {
+      const container = document.getElementById('tabContent');
+      if (!container) return;
+      container.innerHTML = `
+        <div style="color:#e7cf8a; padding:10px;">
+          <h3>🐾 ${state.playerName}</h3>
+          <p><strong>Breed:</strong> ${state.breed}</p>
+          <p><strong>Level:</strong> ${state.upgradeLevel} | <strong>Prestige:</strong> ${state.prestigeCount}</p>
+          <p>🦴 Bones: ${state.bones}</p>
+          <p>👆 Total Taps: ${state.totalTaps}</p>
+          <p>⚡ Tap Power: ${state.tapPower} | 🕒 Auto: ${state.autoCollector}/s</p>
+        </div>
+      `;
+    }
+
+    function renderUpgradesTab() {
+      const cost = 25 * state.upgradeLevel;
+      const container = document.getElementById('tabContent');
+      container.innerHTML = `
+        <div class="upgrade-item">
+          <span>💪 Tap Power +1</span>
+          <button id="upgradeTapBtn">Cost: ${cost} 🦴</button>
+        </div>
+        <div class="upgrade-item">
+          <span>🕒 Auto Collector +1/s</span>
+          <button id="upgradeAutoBtn">Cost: 40 🦴</button>
+        </div>
+        <p style="color:#b9aa7a; margin-top:10px;">Current tap: ${state.tapPower} | Auto: ${state.autoCollector}/s</p>
+      `;
+      document.getElementById('upgradeTapBtn').addEventListener('click', () => {
+        const price = 25 * state.upgradeLevel;
+        if (state.bones >= price) {
+          state.bones -= price;
+          state.tapPower++;
+          state.upgradeLevel++;
+          updateBoneDisplay();
+          renderUpgradesTab();
+        } else alert('Not enough bones!');
+      });
+      document.getElementById('upgradeAutoBtn').addEventListener('click', () => {
+        if (state.bones >= 40) {
+          state.bones -= 40;
+          state.autoCollector++;
+          updateBoneDisplay();
+          renderUpgradesTab();
+        } else alert('Need 40 bones.');
+      });
+    }
+
+    function renderPrestigeTab() {
+      const container = document.getElementById('tabContent');
+      container.innerHTML = `
+        <div style="color:#e7cf8a;">
+          <h3>🌟 Prestige System</h3>
+          <p>Reset taps & upgrades, but gain a permanent multiplier.</p>
+          <p>Current multiplier: x${state.prestigeMultiplier}</p>
+          <p>Requires 500 bones to prestige.</p>
+          <button id="prestigeBtn">🌟 Prestige Now (500 🦴)</button>
+        </div>
+      `;
+      document.getElementById('prestigeBtn').addEventListener('click', () => {
+        if (state.bones >= 500) {
+          state.prestigeCount++;
+          state.prestigeMultiplier++;
+          state.bones = 0;
+          state.tapPower = 1;
+          state.autoCollector = 0;
+          state.upgradeLevel = 1;
+          state.totalTaps = 0;
+          updateBoneDisplay();
+          renderPrestigeTab();
+          alert('Prestige achieved! Multiplier increased.');
+        } else alert('You need 500 bones.');
+      });
+    }
+
+    function renderShopTab() {
+      const container = document.getElementById('tabContent');
+      container.innerHTML = `
+        <div class="shop-item">
+          <span>🦴 100 Bones</span>
+          <button id="buyBones">Free (ad)</button>
+        </div>
+        <div class="shop-item">
+          <span>⚡ 2x Tap boost (30s)</span>
+          <button id="buyBoost">20 🦴</button>
+        </div>
+        <p style="color:#b9aa7a;">(Shop placeholder – dog toys coming soon)</p>
+      `;
+      document.getElementById('buyBones').addEventListener('click', () => {
+        state.bones += 100;
+        updateBoneDisplay();
+        alert('You watched an ad! +100 bones.');
+      });
+      document.getElementById('buyBoost').addEventListener('click', () => {
+        if (state.bones >= 20) {
+          state.bones -= 20;
+          state.tapPower *= 2;
+          updateBoneDisplay();
+          setTimeout(() => { state.tapPower = Math.max(1, state.tapPower/2); }, 30000);
+          alert('Boost activated for 30 seconds!');
+        } else alert('Not enough bones.');
+      });
+    }
+
+    renderSetup();
+  })();
+</script>
+</body>
+</html>
