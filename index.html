@@ -24,20 +24,20 @@
     .game-container {
       max-width: 500px;
       width: 100%;
-      background: #0a0a0a;
-      border-radius: 38px;
-      box-shadow: 0 25px 45px rgba(0,0,0,0.9), 0 0 0 2px #333333;
+      background: #000000;
+      border-radius: 0;
+      box-shadow: none;
       overflow: hidden;
-      border: 1px solid #444444;
+      border: none;
     }
 
     .game-header {
-      background: #111111;
+      background: #000000;
       padding: 14px 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 2px solid #333333;
+      border-bottom: 1px solid #222222;
     }
     .game-header h2 {
       color: #ffffff;
@@ -47,18 +47,18 @@
       text-shadow: 0 2px 4px black;
     }
     .resource-badge {
-      background: #1a1a1a;
+      background: #111111;
       padding: 6px 16px;
       border-radius: 30px;
       color: #ffd700;
       font-weight: bold;
-      border: 1px solid #444444;
+      border: 1px solid #333333;
     }
 
     .screen {
       display: none;
       padding: 16px;
-      background: #0a0a0a;
+      background: #000000;
       min-height: 500px;
     }
     .screen.active {
@@ -72,11 +72,11 @@
       margin-top: 15px;
     }
     .breed-card {
-      background: #1a1a1a;
+      background: #0a0a0a;
       border-radius: 24px;
       padding: 12px;
       text-align: center;
-      border: 2px solid #333333;
+      border: 2px solid #222222;
       cursor: pointer;
       transition: all 0.2s;
       color: #cccccc;
@@ -86,14 +86,14 @@
     }
     .breed-card.selected {
       border: 3px solid #ffd700;
-      background: #222222;
+      background: #111111;
       box-shadow: 0 0 18px #ffd700;
     }
     
     .breed-img-placeholder {
       width: 100%;
       aspect-ratio: 1 / 1;
-      background: #222222;
+      background: #0a0a0a;
       border-radius: 16px;
       margin-bottom: 8px;
       display: flex;
@@ -103,7 +103,7 @@
       font-size: 0.75rem;
       background-size: cover;
       background-position: center 35%;
-      border: 1px dashed #555555;
+      border: 1px dashed #333333;
       overflow: hidden;
     }
     
@@ -126,8 +126,8 @@
       width: 100%;
       padding: 14px;
       border-radius: 30px;
-      border: 2px solid #444444;
-      background: #1a1a1a;
+      border: 2px solid #333333;
+      background: #0a0a0a;
       color: #ffffff;
       font-weight: bold;
       margin: 12px 0;
@@ -151,7 +151,7 @@
       border-bottom: 4px solid #cc9900;
     }
 
-    /* Clean tapper - no border, no animation, no counter text */
+    /* Clean tapper on pure black background */
     .tap-area {
       background: transparent;
       width: 200px;
@@ -164,12 +164,27 @@
       user-select: none;
       overflow: hidden;
       position: relative;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      outline: none;
+    }
+    .tap-area:active,
+    .tap-area:focus,
+    .tap-area:focus-visible {
+      outline: none;
+      background: transparent;
+      -webkit-tap-highlight-color: transparent;
     }
     .tap-gif {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      border-radius: 16px;
+      border-radius: 0;
+      pointer-events: none;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
     }
 
     .stat-row {
@@ -180,11 +195,11 @@
       margin: 8px 0;
     }
     .progress-bg {
-      background: #222222;
+      background: #111111;
       height: 14px;
       border-radius: 10px;
       margin: 6px 0;
-      border: 1px solid #444444;
+      border: 1px solid #333333;
     }
     .progress-fill {
       height: 100%;
@@ -199,57 +214,57 @@
     }
     .tab {
       flex: 1;
-      background: #1a1a1a;
+      background: #0a0a0a;
       padding: 10px 4px;
       text-align: center;
       border-radius: 20px 20px 0 0;
       font-weight: bold;
       color: #888888;
       cursor: pointer;
-      border: 1px solid #333333;
+      border: 1px solid #222222;
       border-bottom: none;
       font-size: 0.7rem;
     }
     .tab.active {
-      background: #0a0a0a;
+      background: #000000;
       color: #ffd700;
       border-bottom: 2px solid #ffd700;
     }
 
     .upgrade-item {
-      background: #1a1a1a;
+      background: #0a0a0a;
       border-radius: 20px;
       padding: 12px;
       margin: 10px 0;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border: 1px solid #333333;
+      border: 1px solid #222222;
       color: #ffffff;
     }
     button {
-      background: #333333;
+      background: #222222;
       border: none;
       color: #ffffff;
       font-weight: bold;
       padding: 10px 16px;
       border-radius: 30px;
       cursor: pointer;
-      border-bottom: 3px solid #555555;
+      border-bottom: 3px solid #444444;
     }
     button:hover {
-      background: #444444;
+      background: #333333;
     }
     .shop-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: #1a1a1a;
+      background: #0a0a0a;
       padding: 12px;
       border-radius: 18px;
       margin: 8px 0;
       color: #ffffff;
-      border: 1px solid #333333;
+      border: 1px solid #222222;
     }
 
     h3, p {
@@ -276,8 +291,9 @@
       autoCollector: 0,
       prestigeMultiplier: 1,
       currentTapImage: 0,
-      // Your 6 custom tapper images
-      tapImageCycle: [
+      
+      // Default tapper images
+      defaultTapImages: [
         'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-054556%7E2.png',
         'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-054625%7E2.png',
         'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-054630%7E2.png',
@@ -285,7 +301,24 @@
         'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-054642%7E2.png',
         'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-054649%7E2.png'
       ],
+      
+      // Breed-specific tapper images
+      breedTapImages: {
+        'Staffordshire Bull Terrier': [
+          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-062822%7E3.png',
+          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-062836%7E2.png',
+          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-062846%7E2.png',
+          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-062914%7E2.png',
+          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-062934%7E2.png',
+          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-063013%7E2.png'
+        ]
+      },
+      
       breedImages: {
+        'Staffordshire Bull Terrier': {
+          url: 'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-062136%7E2.png',
+          position: 'center 35%'
+        },
         'XL Bully': {
           url: 'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-044808%7E3.png',
           position: 'center 35%'
@@ -305,6 +338,10 @@
         'Shih Tzu'
       ]
     };
+
+    function getTapImages() {
+      return state.breedTapImages[state.breed] || state.defaultTapImages;
+    }
 
     const appDiv = document.getElementById('app');
 
@@ -360,12 +397,14 @@
           return;
         }
         state.screen = 'main';
+        state.currentTapImage = 0;
         renderMainGame();
       });
     }
 
     function renderMainGame() {
-      const currentImage = state.tapImageCycle[state.currentTapImage];
+      const tapImages = getTapImages();
+      const currentImage = tapImages[state.currentTapImage];
       let html = `
         <div class="game-header">
           <h2>🐕 ${state.playerName}</h2>
@@ -376,7 +415,6 @@
             <img src="${currentImage}" alt="Tap Dog" class="tap-gif" id="tapGif" />
           </div>
           <div class="stat-row"><span>${state.breed}</span><span>⭐ Prestige ${state.prestigeCount}</span></div>
-          <div class="stat-row"><span>Total Taps:</span><span id="totalTaps">${state.totalTaps}</span></div>
           <div class="progress-bg"><div class="progress-fill" id="xpBar" style="width:${Math.min(100, (state.bones%100))}%;"></div></div>
 
           <div class="tab-row">
@@ -396,11 +434,12 @@
     }
 
     function cycleToNextImage() {
-      state.currentTapImage = (state.currentTapImage + 1) % state.tapImageCycle.length;
+      const tapImages = getTapImages();
+      state.currentTapImage = (state.currentTapImage + 1) % tapImages.length;
       
       const gif = document.getElementById('tapGif');
       if (gif) {
-        gif.src = state.tapImageCycle[state.currentTapImage];
+        gif.src = tapImages[state.currentTapImage];
       }
     }
 
@@ -410,7 +449,6 @@
       state.totalTaps++;
       updateBoneDisplay();
       
-      // Cycle to next image
       cycleToNextImage();
       
       if (state.tabActive === 'profile') renderProfileTab();
@@ -419,8 +457,6 @@
     function updateBoneDisplay() {
       const bd = document.getElementById('boneDisplay');
       if (bd) bd.textContent = state.bones;
-      const taps = document.getElementById('totalTaps');
-      if (taps) taps.textContent = state.totalTaps;
     }
 
     let autoInterval;
@@ -460,9 +496,7 @@
           <p><strong>Breed:</strong> ${state.breed}</p>
           <p><strong>Level:</strong> ${state.upgradeLevel} | <strong>Prestige:</strong> ${state.prestigeCount}</p>
           <p>🦴 Bones: ${state.bones}</p>
-          <p>👆 Total Taps: ${state.totalTaps}</p>
           <p>⚡ Tap Power: ${state.tapPower} | 🕒 Auto: ${state.autoCollector}/s</p>
-          <p>🖼️ Tap Images: ${state.tapImageCycle.length} in cycle</p>
         </div>
       `;
     }
