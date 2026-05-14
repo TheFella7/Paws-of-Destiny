@@ -230,7 +230,6 @@
     .stat-box .stat-label { font-size: 0.7rem; color: #888888; }
     .stat-box .stat-value { font-size: 1rem; font-weight: bold; color: #ffd700; }
 
-    /* Wider tab row for more tabs */
     .tab-row { display: flex; gap: 4px; margin-top: 14px; flex-wrap: wrap; }
     .tab { flex: 1; min-width: 50px; background: #0a0a0a; padding: 10px 4px; text-align: center; border-radius: 20px 20px 0 0; font-weight: bold; color: #888888; cursor: pointer; border: 1px solid #222222; border-bottom: none; font-size: 0.6rem; }
     .tab.active { background: #000000; color: #ffd700; border-bottom: 2px solid #ffd700; }
@@ -244,7 +243,6 @@
     button:hover { background: #333333; }
     button:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    /* Shop styles */
     .shop-tier { background: linear-gradient(145deg, #1a1a1a, #0a0a0a); border-radius: 20px; padding: 16px; margin: 10px 0; border: 1px solid #333333; color: #ffffff; position: relative; overflow: hidden; }
     .shop-tier.featured { border: 2px solid #ffd700; box-shadow: 0 0 20px rgba(255,215,0,0.3); }
     .shop-tier.best-value { border: 2px solid #ffd700; box-shadow: 0 0 30px rgba(255,215,0,0.5); background: linear-gradient(145deg, #222200, #0a0a00); }
@@ -263,7 +261,6 @@
     .payment-btn { flex: 1; font-size: 0.7rem; padding: 8px 6px; background: #333; border-radius: 15px; border: none; color: #fff; cursor: pointer; border-bottom: 2px solid #555; }
     .payment-btn.polygon-btn { background: #8247e5; border-bottom-color: #6a3ab5; }
 
-    /* Payment modal */
     .payment-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; z-index: 1000; }
     .payment-modal-content { background: #1a1a1a; border-radius: 20px; padding: 20px; max-width: 400px; width: 90%; border: 2px solid #8247e5; color: #fff; }
     .payment-modal h3 { color: #8247e5; margin-bottom: 10px; }
@@ -273,12 +270,13 @@
     .payment-modal .close-btn { background: #444; border-bottom-color: #666; }
     .payment-modal .verify-btn { background: #1a5c1a; border-bottom-color: #2d8f2d; }
     .payment-modal .verify-btn:disabled { background: #333; border-bottom-color: #555; cursor: not-allowed; }
+    .payment-modal .manual-verify-btn { background: #5c3a1a; border-bottom-color: #8f5c2d; }
     .payment-modal .status-text { font-size: 0.8rem; margin: 8px 0; text-align: center; }
     .payment-modal .status-text.verifying { color: #ffd700; }
     .payment-modal .status-text.success { color: #4caf50; }
     .payment-modal .status-text.error { color: #f44336; }
+    .payment-modal .status-text.info { color: #ffd700; }
 
-    /* World Boss & Arena styles */
     .boss-card, .arena-card { background: #0a0a0a; border-radius: 20px; padding: 16px; margin: 10px 0; border: 1px solid #333; color: #fff; }
     .boss-hp-bar { background: #111; height: 20px; border-radius: 10px; overflow: hidden; border: 1px solid #333; margin: 10px 0; }
     .boss-hp-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, #c44, #f66); transition: width 0.3s; }
@@ -317,53 +315,306 @@
 
     const POLYGON_RATE_GBP = 0.07;
     const PAYMENT_ADDRESS = '0x7efCa6129eAFD3FAFf3134D74d3cA04ab2894983';
-    const POLYGON_RPC_URL = 'https://polygon-rpc.com';
+    
+    // Multiple RPC endpoints for better reliability
+    const RPC_ENDPOINTS = [
+      'https://polygon-rpc.com',
+      'https://rpc-mainnet.maticvigil.com',
+      'https://rpc-mainnet.matic.network',
+      'https://rpc-mainnet.matic.quiknode.pro',
+      'https://polygon-rpc.com/'
+    ];
     
     function gbpToPolygon(gbp) { return (gbp / POLYGON_RATE_GBP).toFixed(2); }
 
+    // ============ IMPROVED VERIFICATION SYSTEM ============
+    
+    async function tryRPC(endpoint, method, params) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
+        
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ jsonrpc: '2.0', method, params, id: 1 }),
+          signal: controller.signal
+        });
+        
+        clearTimeout(timeoutId);
+        const data = await response.json();
+        return { success: true, data };
+      } catch (error) {
+        return { success: false, error: error.message };
+      }
+    }
+    
+    async function verifyTransactionOnChain(txHash) {
+      // Try each RPC endpoint
+      for (const endpoint of RPC_ENDPOINTS) {
+        // First try to get transaction receipt
+        const receiptResult = await tryRPC(endpoint, 'eth_getTransactionReceipt', [txHash]);
+        
+        if (receiptResult.success && receiptResult.data && !receiptResult.data.error && receiptResult.data.result) {
+          const receipt = receiptResult.data.result;
+          
+          // Check if transaction was successful
+          if (receipt.status === '0x1') {
+            // Verify recipient
+            if (receipt.to && receipt.to.toLowerCase() === PAYMENT_ADDRESS.toLowerCase()) {
+              // Now get the transaction details for amount
+              const txResult = await tryRPC(endpoint, 'eth_getTransactionByHash', [txHash]);
+              
+              if (txResult.success && txResult.data && txResult.data.result) {
+                return {
+                  found: true,
+                  confirmed: true,
+                  correctAddress: true,
+                  amount: Number(BigInt(txResult.data.result.value)) / 1e18,
+                  receipt: receipt,
+                  tx: txResult.data.result
+                };
+              }
+              
+              // If we have receipt but can't get transaction, still count as found
+              return {
+                found: true,
+                confirmed: true,
+                correctAddress: true,
+                amount: null,
+                receipt: receipt
+              };
+            } else {
+              return {
+                found: true,
+                confirmed: true,
+                correctAddress: false,
+                error: 'Payment sent to wrong address'
+              };
+            }
+          } else if (receipt.status === '0x0') {
+            return {
+              found: true,
+              confirmed: false,
+              error: 'Transaction failed on blockchain'
+            };
+          }
+        }
+        
+        // If receipt not found, try getting the transaction directly (might be pending)
+        const txResult = await tryRPC(endpoint, 'eth_getTransactionByHash', [txHash]);
+        
+        if (txResult.success && txResult.data && txResult.data.result) {
+          const tx = txResult.data.result;
+          
+          // Check if it's pending (no block number yet)
+          if (!tx.blockNumber) {
+            return {
+              found: true,
+              confirmed: false,
+              pending: true,
+              error: 'Transaction is still pending. Please wait for confirmation.'
+            };
+          }
+        }
+      }
+      
+      // If we get here, transaction wasn't found on any RPC
+      return {
+        found: false,
+        error: 'Transaction not found on blockchain. Please check the hash and try again.'
+      };
+    }
+    
     async function verifyTransaction(txHash, expectedAmountPOL, tierId) {
       const tier = state.shopTiers.find(t => t.id === tierId);
       if (!tier) return { success: false, error: 'Invalid tier' };
-      try {
-        const response = await fetch(POLYGON_RPC_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', method: 'eth_getTransactionReceipt', params: [txHash], id: 1 }) });
-        const data = await response.json();
-        if (data.error) return { success: false, error: 'Transaction not found or still pending.' };
-        if (!data.result) return { success: false, error: 'Transaction not found.' };
-        const receipt = data.result;
-        if (receipt.status !== '0x1') return { success: false, error: 'Transaction failed.' };
-        if (receipt.to && receipt.to.toLowerCase() !== PAYMENT_ADDRESS.toLowerCase()) return { success: false, error: 'Wrong recipient address.' };
-        const txResponse = await fetch(POLYGON_RPC_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', method: 'eth_getTransactionByHash', params: [txHash], id: 1 }) });
-        const txData = await txResponse.json();
-        if (!txData.result) return { success: false, error: 'Unable to verify amount.' };
-        const amountPOL = Number(BigInt(txData.result.value)) / 1e18;
+      
+      // First, try on-chain verification
+      const result = await verifyTransactionOnChain(txHash);
+      
+      if (result.found && result.confirmed && result.correctAddress) {
+        // Transaction verified on chain!
         const expectedPOL = parseFloat(expectedAmountPOL);
-        if (amountPOL >= expectedPOL * 0.99) {
-          if (!state.tierPurchases[tierId]) state.tierPurchases[tierId] = 0;
-          state.shopMultiplierOwned += tier.multiplier; state.tierPurchases[tierId]++; saveCurrentProfile();
-          return { success: true, message: `✅ Verified! ${tier.name} +x${tier.multiplier}\nTotal: x${getTotalMultiplier()}` };
+        
+        if (result.amount !== null) {
+          // We have the exact amount
+          if (result.amount >= expectedPOL * 0.99) {
+            return await grantMultiplier(tier, tierId, txHash, 'blockchain');
+          } else {
+            return {
+              success: false,
+              error: `Insufficient payment. Sent: ${result.amount.toFixed(4)} POL, Required: ${expectedPOL.toFixed(2)} POL`,
+              canManualVerify: true
+            };
+          }
+        } else {
+          // Transaction found but amount not verified, allow manual
+          return {
+            success: false,
+            error: 'Transaction found but unable to verify exact amount. Please use manual verification.',
+            canManualVerify: true,
+            txFound: true
+          };
         }
-        return { success: false, error: `Insufficient. Sent: ${amountPOL.toFixed(4)} POL, Need: ${expectedPOL.toFixed(2)} POL` };
-      } catch (error) { return { success: false, error: 'Network error. Try again.' }; }
+      }
+      
+      if (result.pending) {
+        return {
+          success: false,
+          error: 'Transaction is pending. Wait 30-60 seconds and try again.',
+          canRetry: true
+        };
+      }
+      
+      // Transaction not found - offer manual verification
+      return {
+        success: false,
+        error: result.error || 'Transaction not found. You can use manual verification if you\'re sure the payment was sent.',
+        canManualVerify: true
+      };
+    }
+    
+    async function grantMultiplier(tier, tierId, txHash, method) {
+      if (!state.tierPurchases[tierId]) state.tierPurchases[tierId] = 0;
+      state.shopMultiplierOwned += tier.multiplier;
+      state.tierPurchases[tierId]++;
+      saveCurrentProfile();
+      
+      return {
+        success: true,
+        message: `✅ Payment Verified via ${method}!\n\nTransaction: ${txHash.slice(0,10)}...${txHash.slice(-6)}\n\n${tier.name} activated!\n+x${tier.multiplier} multiplier added!\n\nTotal multiplier: x${getTotalMultiplier()}`
+      };
+    }
+    
+    function manualVerify(tierId, txHash, polAmount) {
+      const tier = state.shopTiers.find(t => t.id === tierId);
+      if (!tier) return;
+      
+      const confirmMsg = `⚠️ MANUAL VERIFICATION\n\n` +
+        `You are manually verifying this payment.\n\n` +
+        `Tier: ${tier.name}\n` +
+        `Amount: ${polAmount} POL\n` +
+        `Transaction: ${txHash.slice(0,10)}...${txHash.slice(-6)}\n\n` +
+        `By confirming, you declare that you have sent the correct amount to:\n` +
+        `${PAYMENT_ADDRESS}\n\n` +
+        `Are you sure?`;
+      
+      if (confirm(confirmMsg)) {
+        if (!state.tierPurchases[tierId]) state.tierPurchases[tierId] = 0;
+        state.shopMultiplierOwned += tier.multiplier;
+        state.tierPurchases[tierId]++;
+        saveCurrentProfile();
+        alert(`✅ Manual Verification Complete!\n\n${tier.name} activated!\n+x${tier.multiplier} multiplier added!\n\nTotal multiplier: x${getTotalMultiplier()}`);
+        return true;
+      }
+      return false;
     }
 
     function showPaymentModal(tierId) {
-      const tier = state.shopTiers.find(t => t.id === tierId); if (!tier) return;
+      const tier = state.shopTiers.find(t => t.id === tierId);
+      if (!tier) return;
+      
       const polAmount = gbpToPolygon(tier.price);
-      const existingModal = document.querySelector('.payment-modal'); if (existingModal) existingModal.remove();
-      const modal = document.createElement('div'); modal.className = 'payment-modal';
-      modal.innerHTML = `<div class="payment-modal-content"><h3>🔷 Polygon Payment</h3><p>${tier.name} - x${tier.multiplier}</p><div class="amount-display">£${tier.price.toFixed(2)} = ${polAmount} POL</div><p style="font-size:0.8rem;color:#888;">Send exactly ${polAmount} POL to:</p><div class="address-copy" id="copyAddress">${PAYMENT_ADDRESS}</div><p style="font-size:0.7rem;color:#888;">Click to copy • Polygon Only</p><input class="input-field" id="txHashInput" placeholder="0x... transaction hash" style="margin:5px 0;font-size:0.8rem;" /><div class="status-text" id="statusText"></div><button class="verify-btn" id="verifyPaymentBtn">🔍 Verify on Blockchain</button><button class="close-btn" id="closeModalBtn">❌ Cancel</button></div>`;
+      
+      const existingModal = document.querySelector('.payment-modal');
+      if (existingModal) existingModal.remove();
+      
+      const modal = document.createElement('div');
+      modal.className = 'payment-modal';
+      modal.innerHTML = `
+        <div class="payment-modal-content">
+          <h3>🔷 Polygon Payment</h3>
+          <p>${tier.name} - x${tier.multiplier} Multiplier</p>
+          <div class="amount-display">£${tier.price.toFixed(2)} = ${polAmount} POL</div>
+          <p style="font-size:0.8rem;color:#888;">Send exactly ${polAmount} POL to:</p>
+          <div class="address-copy" id="copyAddress" title="Click to copy">${PAYMENT_ADDRESS}</div>
+          <p style="font-size:0.7rem;color:#888;margin:5px 0;">Click address to copy • Polygon Network Only</p>
+          <p style="font-size:0.7rem;color:#ffd700;">After sending, paste your transaction hash:</p>
+          <input class="input-field" id="txHashInput" placeholder="0x... transaction hash" style="margin:5px 0;font-size:0.8rem;" />
+          <div class="status-text" id="statusText"></div>
+          <button class="verify-btn" id="verifyPaymentBtn">🔍 Verify on Blockchain</button>
+          <button class="manual-verify-btn" id="manualVerifyBtn" style="display:none;">⚠️ Manual Verification</button>
+          <p style="font-size:0.65rem;color:#888;margin-top:5px;">Verification can take 10-30 seconds</p>
+          <button class="close-btn" id="closeModalBtn">❌ Cancel</button>
+        </div>
+      `;
+      
       document.body.appendChild(modal);
-      document.getElementById('copyAddress').addEventListener('click', function() { navigator.clipboard.writeText(PAYMENT_ADDRESS).then(()=>{ this.style.background='#1a3a1a'; this.textContent='✅ Copied!'; setTimeout(()=>{ this.style.background='#111'; this.textContent=PAYMENT_ADDRESS; },2000); }); });
-      document.getElementById('verifyPaymentBtn').addEventListener('click', async function() {
-        const txHash = document.getElementById('txHashInput').value.trim(), st = document.getElementById('statusText'), vb = document.getElementById('verifyPaymentBtn');
-        if (!txHash || !txHash.startsWith('0x')) { st.textContent='⚠️ Invalid hash'; st.className='status-text error'; return; }
-        st.textContent='🔍 Verifying on Polygon...'; st.className='status-text verifying'; vb.disabled=true; vb.textContent='⏳ Verifying...';
-        const result = await verifyTransaction(txHash, polAmount, tierId);
-        if (result.success) { st.textContent=result.message; st.className='status-text success'; vb.textContent='✅ Verified!'; setTimeout(()=>{ modal.remove(); renderShopTab(); },2000); }
-        else { st.textContent='❌ '+result.error; st.className='status-text error'; vb.disabled=false; vb.textContent='🔍 Try Again'; }
+      
+      document.getElementById('copyAddress').addEventListener('click', function() {
+        navigator.clipboard.writeText(PAYMENT_ADDRESS).then(() => {
+          this.style.background = '#1a3a1a';
+          this.textContent = '✅ Address Copied!';
+          setTimeout(() => { this.style.background = '#111'; this.textContent = PAYMENT_ADDRESS; }, 2000);
+        }).catch(() => {
+          // Fallback for browsers without clipboard API
+          this.style.background = '#1a3a1a';
+          this.textContent = '📋 Copy manually: ' + PAYMENT_ADDRESS;
+        });
       });
-      document.getElementById('closeModalBtn').addEventListener('click',()=>modal.remove());
-      modal.addEventListener('click',(e)=>{ if(e.target===modal) modal.remove(); });
+      
+      let manualVerifyVisible = false;
+      
+      document.getElementById('verifyPaymentBtn').addEventListener('click', async function() {
+        const txHash = document.getElementById('txHashInput').value.trim();
+        const statusText = document.getElementById('statusText');
+        const verifyBtn = document.getElementById('verifyPaymentBtn');
+        const manualBtn = document.getElementById('manualVerifyBtn');
+        
+        if (!txHash || !txHash.startsWith('0x')) {
+          statusText.textContent = '⚠️ Please enter a valid transaction hash (starts with 0x)';
+          statusText.className = 'status-text error';
+          return;
+        }
+        
+        if (txHash.length < 66) {
+          statusText.textContent = '⚠️ Transaction hash seems too short. Please check.';
+          statusText.className = 'status-text error';
+          return;
+        }
+        
+        statusText.textContent = '🔍 Verifying on Polygon blockchain... (this may take up to 30 seconds)';
+        statusText.className = 'status-text verifying';
+        verifyBtn.disabled = true;
+        verifyBtn.textContent = '⏳ Verifying...';
+        
+        const result = await verifyTransaction(txHash, polAmount, tierId);
+        
+        if (result.success) {
+          statusText.textContent = result.message;
+          statusText.className = 'status-text success';
+          verifyBtn.textContent = '✅ Verified!';
+          setTimeout(() => { modal.remove(); renderShopTab(); }, 2000);
+        } else {
+          statusText.textContent = '❌ ' + result.error;
+          statusText.className = 'status-text error';
+          verifyBtn.disabled = false;
+          verifyBtn.textContent = '🔄 Retry Verification';
+          
+          // Show manual verification button
+          if (result.canManualVerify && !manualVerifyVisible) {
+            manualBtn.style.display = 'block';
+            manualVerifyVisible = true;
+          }
+        }
+      });
+      
+      document.getElementById('manualVerifyBtn').addEventListener('click', function() {
+        const txHash = document.getElementById('txHashInput').value.trim();
+        if (!txHash || !txHash.startsWith('0x')) {
+          alert('Please enter a valid transaction hash first.');
+          return;
+        }
+        
+        if (manualVerify(tierId, txHash, polAmount)) {
+          modal.remove();
+          renderShopTab();
+        }
+      });
+      
+      document.getElementById('closeModalBtn').addEventListener('click', () => modal.remove());
+      modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
     }
 
     function showPaypalModal(tierId) {
@@ -455,97 +706,11 @@
     function performPrestige() { state.prestigeOwned++; state.tapPowerOwned=0; state.autoCollectorOwned=0; state.tapPower=1; state.autoCollector=0; state.totalTaps=0; state.level=1; state.exp=0; state.expToNextLevel=getExpForLevel(1); }
 
     // ============ WORLD BOSS SYSTEM ============
-    function attackWorldBoss() {
-      const damage = state.tapPower * getTotalMultiplier() * 10;
-      state.worldBossHP -= damage;
-      if (state.worldBossHP <= 0) {
-        const reward = state.worldBossMaxHP * 2;
-        state.bones += reward;
-        state.worldBossMaxHP = Math.floor(state.worldBossMaxHP * 1.5);
-        state.worldBossHP = state.worldBossMaxHP;
-        updateBoneDisplay();
-        saveCurrentProfile();
-        alert(`🎉 World Boss Defeated!\n\nReward: ${formatNum(reward)} 🦴\n\nNew boss spawned with ${formatNum(state.worldBossMaxHP)} HP!`);
-      }
-      renderWorldBossTab();
-    }
-
-    function renderWorldBossTab() {
-      const c=document.getElementById('tabContent'); if(!c)return;
-      const hpPercent = Math.max(0, (state.worldBossHP / state.worldBossMaxHP) * 100);
-      c.innerHTML = `<div style="color:#fff;"><h3 style="color:#ffd700;">🐉 World Boss</h3>
-        <div class="boss-card">
-          <h4 style="color:#f66;">🗡️ The Bone Collector</h4>
-          <p style="font-size:0.8rem;color:#888;">A massive beast terrorizing the dog park!</p>
-          <div class="boss-hp-bar"><div class="boss-hp-fill" style="width:${hpPercent}%;"></div></div>
-          <p style="font-size:0.8rem;">HP: ${formatNum(Math.max(0,state.worldBossHP))} / ${formatNum(state.worldBossMaxHP)}</p>
-          <p style="font-size:0.7rem;color:#888;">Your damage: ${formatNum(state.tapPower * getTotalMultiplier() * 10)} per hit</p>
-          <button id="attackBossBtn" style="width:100%;margin-top:10px;">⚔️ Attack Boss</button>
-          <p style="font-size:0.7rem;color:#ffd700;margin-top:5px;">Defeat reward: ${formatNum(state.worldBossMaxHP * 2)} 🦴</p>
-        </div>
-        <p style="color:#888;font-size:0.7rem;text-align:center;">Boss gets stronger after each defeat!</p></div>`;
-      document.getElementById('attackBossBtn').addEventListener('click', attackWorldBoss);
-    }
-
-    function renderArenaTab() {
-      const c=document.getElementById('tabContent'); if(!c)return;
-      const opponents = [
-        { name: 'Rex the Rottweiler', power: 50, reward: 100 },
-        { name: 'Luna the Labrador', power: 120, reward: 250 },
-        { name: 'Max the Mastiff', power: 250, reward: 500 },
-        { name: 'Bella the Boxer', power: 500, reward: 1000 }
-      ];
-      let html = `<div style="color:#fff;"><h3 style="color:#ffd700;">🏟️ PvP Arena</h3><p style="font-size:0.8rem;color:#888;margin-bottom:10px;">Fight other dogs for glory and bones!</p>`;
-      opponents.forEach(opp => {
-        const winChance = Math.min(95, Math.floor((state.tapPower * getTotalMultiplier() / opp.power) * 50));
-        html += `<div class="arena-opponent"><div><strong>${opp.name}</strong><p style="font-size:0.7rem;color:#888;">Power: ${formatNum(opp.power)} | Win Rate: ${winChance}%</p></div><button class="fight-arena-btn" data-reward="${opp.reward}" data-power="${opp.power}">⚔️ Fight</button></div>`;
-      });
-      html += `<p style="color:#ffd700;margin-top:10px;">🏆 Arena Wins: ${formatNum(state.arenaWins)}</p></div>`;
-      c.innerHTML = html;
-      document.querySelectorAll('.fight-arena-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const reward = parseInt(this.dataset.reward), power = parseInt(this.dataset.power);
-          const winChance = Math.min(95, Math.floor((state.tapPower * getTotalMultiplier() / power) * 50));
-          if (Math.random() * 100 < winChance) {
-            state.bones += reward; state.arenaWins++; updateBoneDisplay(); saveCurrentProfile();
-            alert(`🏆 Victory!\n\nYou defeated the opponent!\n+${formatNum(reward)} 🦴`);
-          } else {
-            alert(`💀 Defeat!\n\nYou lost the battle. Train harder!`);
-          }
-          renderArenaTab();
-        });
-      });
-    }
-
-    function renderHowToPlayTab() {
-      const c=document.getElementById('tabContent'); if(!c)return;
-      c.innerHTML = `<div style="color:#fff;"><h3 style="color:#ffd700;">📖 How to Play</h3>
-        <div style="background:#0a0a0a;border-radius:15px;padding:12px;margin:8px 0;border:1px solid #333;">
-          <h4 style="color:#ffd700;">🐾 Getting Started</h4><p style="font-size:0.8rem;">Choose your breed, enter a name, and start tapping! Each tap earns bones based on your multiplier.</p></div>
-        <div style="background:#0a0a0a;border-radius:15px;padding:12px;margin:8px 0;border:1px solid #333;">
-          <h4 style="color:#ffd700;">📈 Upgrades</h4><p style="font-size:0.8rem;">Buy Tap Power to increase earnings per tap. Auto Collector earns bones passively every second.</p></div>
-        <div style="background:#0a0a0a;border-radius:15px;padding:12px;margin:8px 0;border:1px solid #333;">
-          <h4 style="color:#ffd700;">🌟 Prestige</h4><p style="font-size:0.8rem;">Reset progress for permanent multipliers. Each prestige gives +1x earnings & XP boost.</p></div>
-        <div style="background:#0a0a0a;border-radius:15px;padding:12px;margin:8px 0;border:1px solid #333;">
-          <h4 style="color:#ffd700;">🛒 Shop</h4><p style="font-size:0.8rem;">Buy permanent multipliers with Polygon (POL) crypto or PayPal. Multipliers stack unlimited times!</p></div>
-        <div style="background:#0a0a0a;border-radius:15px;padding:12px;margin:8px 0;border:1px solid #333;">
-          <h4 style="color:#ffd700;">🐉 World Boss</h4><p style="font-size:0.8rem;">Attack the world boss for huge bone rewards. Boss gets stronger after each defeat!</p></div>
-        <div style="background:#0a0a0a;border-radius:15px;padding:12px;margin:8px 0;border:1px solid #333;">
-          <h4 style="color:#ffd700;">🏟️ Arena</h4><p style="font-size:0.8rem;">Fight other dogs in PvP battles. Higher power = better win rate!</p></div></div>`;
-    }
-
-    function renderAboutGameTab() {
-      const c=document.getElementById('tabContent'); if(!c)return;
-      c.innerHTML = `<div style="color:#fff;"><h3 style="color:#ffd700;">ℹ️ About Paws of Destiny</h3>
-        <div style="background:#0a0a0a;border-radius:15px;padding:16px;margin:10px 0;border:1px solid #333;text-align:center;">
-          <p style="font-size:1.2rem;color:#ffd700;">🐾 Paws of Destiny</p>
-          <p style="font-size:0.9rem;color:#ccc;">Version 1.0</p>
-          <p style="font-size:0.8rem;color:#888;margin-top:10px;">An idle tapping RPG where you choose your dog breed and build your legacy!</p>
-          <p style="font-size:0.8rem;color:#888;margin-top:5px;">Featuring 12 unique breeds, real Polygon crypto payments, and endless progression.</p>
-          <p style="font-size:0.7rem;color:#8247e5;margin-top:15px;">🔷 Powered by Polygon Network</p>
-          <p style="font-size:0.7rem;color:#888;">Low fees • Fast transactions • Real crypto rewards</p>
-          <p style="font-size:0.7rem;color:#666;margin-top:10px;">© 2025 Paws of Destiny. All rights reserved.</p></div></div>`;
-    }
+    function attackWorldBoss() { const damage = state.tapPower * getTotalMultiplier() * 10; state.worldBossHP -= damage; if (state.worldBossHP <= 0) { const reward = state.worldBossMaxHP * 2; state.bones += reward; state.worldBossMaxHP = Math.floor(state.worldBossMaxHP * 1.5); state.worldBossHP = state.worldBossMaxHP; updateBoneDisplay(); saveCurrentProfile(); alert(`🎉 World Boss Defeated!\n\nReward: ${formatNum(reward)} 🦴\n\nNew boss spawned with ${formatNum(state.worldBossMaxHP)} HP!`); } renderWorldBossTab(); }
+    function renderWorldBossTab() { const c=document.getElementById('tabContent'); if(!c)return; const hpPercent = Math.max(0, (state.worldBossHP / state.worldBossMaxHP) * 100); c.innerHTML = `<div style="color:#fff;"><h3 style="color:#ffd700;">🐉 World Boss</h3><div class="boss-card"><h4 style="color:#f66;">🗡️ The Bone Collector</h4><p style="font-size:0.8rem;color:#888;">A massive beast terrorizing the dog park!</p><div class="boss-hp-bar"><div class="boss-hp-fill" style="width:${hpPercent}%;"></div></div><p style="font-size:0.8rem;">HP: ${formatNum(Math.max(0,state.worldBossHP))} / ${formatNum(state.worldBossMaxHP)}</p><p style="font-size:0.7rem;color:#888;">Your damage: ${formatNum(state.tapPower * getTotalMultiplier() * 10)} per hit</p><button id="attackBossBtn" style="width:100%;margin-top:10px;">⚔️ Attack Boss</button><p style="font-size:0.7rem;color:#ffd700;margin-top:5px;">Defeat reward: ${formatNum(state.worldBossMaxHP * 2)} 🦴</p></div><p style="color:#888;font-size:0.7rem;text-align:center;">Boss gets stronger after each defeat!</p></div>`; document.getElementById('attackBossBtn').addEventListener('click', attackWorldBoss); }
+    function renderArenaTab() { const c=document.getElementById('tabContent'); if(!c)return; const opponents = [{name:'Rex the Rottweiler',power:50,reward:100},{name:'Luna the Labrador',power:120,reward:250},{name:'Max the Mastiff',power:250,reward:500},{name:'Bella the Boxer',power:500,reward:1000}]; let html = `<div style="color:#fff;"><h3 style="color:#ffd700;">🏟️ PvP Arena</h3><p style="font-size:0.8rem;color:#888;margin-bottom:10px;">Fight other dogs for glory and bones!</p>`; opponents.forEach(opp => { const winChance = Math.min(95, Math.floor((state.tapPower * getTotalMultiplier() / opp.power) * 50)); html += `<div class="arena-opponent"><div><strong>${opp.name}</strong><p style="font-size:0.7rem;color:#888;">Power: ${formatNum(opp.power)} | Win Rate: ${winChance}%</p></div><button class="fight-arena-btn" data-reward="${opp.reward}" data-power="${opp.power}">⚔️ Fight</button></div>`; }); html += `<p style="color:#ffd700;margin-top:10px;">🏆 Arena Wins: ${formatNum(state.arenaWins)}</p></div>`; c.innerHTML = html; document.querySelectorAll('.fight-arena-btn').forEach(btn => { btn.addEventListener('click', function() { const reward = parseInt(this.dataset.reward), power = parseInt(this.dataset.power); const winChance = Math.min(95, Math.floor((state.tapPower * getTotalMultiplier() / power) * 50)); if (Math.random() * 100 < winChance) { state.bones += reward; state.arenaWins++; updateBoneDisplay(); saveCurrentProfile(); alert(`🏆 Victory!\n\nYou defeated the opponent!\n+${formatNum(reward)} 🦴`); } else { alert(`💀 Defeat!\n\nYou lost the battle. Train harder!`); } renderArenaTab(); }); }); }
+    function renderHowToPlayTab() { const c=document.getElementById('tabContent'); if(!c)return; c.innerHTML = `<div style="color:#fff;"><h3 style="color:#ffd700;">📖 How to Play</h3><div style="background:#0a0a0a;border-radius:15px;padding:12px;margin:8px 0;border:1px solid #333;"><h4 style="color:#ffd700;">🐾 Getting Started</h4><p style="font-size:0.8rem;">Choose your breed, enter a name, and start tapping! Each tap earns bones based on your multiplier.</p></div><div style="background:#0a0a0a;border-radius:15px;padding:12px;margin:8px 0;border:1px solid #333;"><h4 style="color:#ffd700;">📈 Upgrades</h4><p style="font-size:0.8rem;">Buy Tap Power to increase earnings per tap. Auto Collector earns bones passively every second.</p></div><div style="background:#0a0a0a;border-radius:15px;padding:12px;margin:8px 0;border:1px solid #333;"><h4 style="color:#ffd700;">🌟 Prestige</h4><p style="font-size:0.8rem;">Reset progress for permanent multipliers. Each prestige gives +1x earnings & XP boost.</p></div><div style="background:#0a0a0a;border-radius:15px;padding:12px;margin:8px 0;border:1px solid #333;"><h4 style="color:#ffd700;">🛒 Shop</h4><p style="font-size:0.8rem;">Buy permanent multipliers with Polygon (POL) crypto or PayPal. Multipliers stack unlimited times!</p></div><div style="background:#0a0a0a;border-radius:15px;padding:12px;margin:8px 0;border:1px solid #333;"><h4 style="color:#ffd700;">🐉 World Boss</h4><p style="font-size:0.8rem;">Attack the world boss for huge bone rewards. Boss gets stronger after each defeat!</p></div><div style="background:#0a0a0a;border-radius:15px;padding:12px;margin:8px 0;border:1px solid #333;"><h4 style="color:#ffd700;">🏟️ Arena</h4><p style="font-size:0.8rem;">Fight other dogs in PvP battles. Higher power = better win rate!</p></div></div>`; }
+    function renderAboutGameTab() { const c=document.getElementById('tabContent'); if(!c)return; c.innerHTML = `<div style="color:#fff;"><h3 style="color:#ffd700;">ℹ️ About Paws of Destiny</h3><div style="background:#0a0a0a;border-radius:15px;padding:16px;margin:10px 0;border:1px solid #333;text-align:center;"><p style="font-size:1.2rem;color:#ffd700;">🐾 Paws of Destiny</p><p style="font-size:0.9rem;color:#ccc;">Version 1.0</p><p style="font-size:0.8rem;color:#888;margin-top:10px;">An idle tapping RPG where you choose your dog breed and build your legacy!</p><p style="font-size:0.8rem;color:#888;margin-top:5px;">Featuring 12 unique breeds, real Polygon crypto payments, and endless progression.</p><p style="font-size:0.7rem;color:#8247e5;margin-top:15px;">🔷 Powered by Polygon Network</p><p style="font-size:0.7rem;color:#888;">Low fees • Fast transactions • Real crypto rewards</p><p style="font-size:0.7rem;color:#666;margin-top:10px;">© 2025 Paws of Destiny. All rights reserved.</p></div></div>`; }
 
     // ============ HELPERS ============
     function getTapImages() { return state.breedTapImages[state.breed] || state.defaultTapImages; }
@@ -611,7 +776,7 @@
     function renderProfileTab(){ const c=document.getElementById('tabContent');if(!c)return; const stats=getEffectiveStats(),tm=getTotalMultiplier(); c.innerHTML=`<div style="color:#fff;padding:10px;"><h3 style="color:#ffd700;">🐾 ${state.playerName}</h3><p><strong>Breed:</strong> ${state.breed}</p><div class="stats-grid"><div class="stat-box"><div class="stat-label">❤️ Health</div><div class="stat-value">${stats.health}</div></div><div class="stat-box"><div class="stat-label">💪 Strength</div><div class="stat-value">${stats.strength}</div></div><div class="stat-box"><div class="stat-label">⚔️ Attack</div><div class="stat-value">${stats.attack}</div></div><div class="stat-box"><div class="stat-label">🛡️ Defence</div><div class="stat-value">${stats.defence}</div></div></div><p><strong>Level:</strong> ${formatNum(state.level)} | <strong>Prestige:</strong> ${formatNum(state.prestigeOwned)}</p><p>⭐ EXP: ${formatNum(state.exp)}/${formatNum(state.expToNextLevel)}</p><p>🦴 Bones: ${formatNum(state.bones)}</p><p>⚡ Tap: ${formatNum(state.tapPower)} | 🕒 Auto: ${formatNum(state.autoCollector)}/s</p><p>🌟 Total Multiplier: x${tm} (Prestige: +${state.prestigeOwned}x | Shop: +${formatNum(state.shopMultiplierOwned)}x)</p><button id="downloadSaveBtn" style="margin-top:10px;width:100%;">💾 Download Save</button><button id="logoutBtn" class="logout-btn" style="margin-top:8px;width:100%;">🚪 Logout</button></div>`; document.getElementById('downloadSaveBtn').addEventListener('click',downloadSaveFile); document.getElementById('logoutBtn').addEventListener('click',logout); }
     function renderUpgradesTab(){ const c=document.getElementById('tabContent');if(!c)return; const tc=getTapPowerCost(),ac=getAutoCollectorCost(),mt=calculateMaxTapUpgrades(),ma=calculateMaxAutoUpgrades(); c.innerHTML=`<div class="upgrade-item"><div class="upgrade-info"><span>💪 Tap Power +1</span><span>Cost: ${formatNum(tc)} 🦴</span></div><p class="next-cost">Owned: ${formatNum(state.tapPowerOwned)} | Max: ${mt.count} (${formatNum(mt.totalCost)} 🦴)</p><div class="upgrade-buttons"><button id="upgradeTapBtn">Buy 1</button><button id="maxTapBtn" class="max-buy-btn">Max (${mt.count})</button></div></div><div class="upgrade-item"><div class="upgrade-info"><span>🕒 Auto Collector +1/s</span><span>Cost: ${formatNum(ac)} 🦴</span></div><p class="next-cost">Owned: ${formatNum(state.autoCollectorOwned)} | Max: ${ma.count} (${formatNum(ma.totalCost)} 🦴)</p><div class="upgrade-buttons"><button id="upgradeAutoBtn">Buy 1</button><button id="maxAutoBtn" class="max-buy-btn">Max (${ma.count})</button></div></div><p style="color:#ccc;margin-top:10px;">Tap: ${formatNum(state.tapPower)} | Auto: ${formatNum(state.autoCollector)}/s | 🦴 ${formatNum(state.bones)}</p>`; document.getElementById('upgradeTapBtn').addEventListener('click',()=>{const p=getTapPowerCost();if(state.bones>=p){state.bones-=p;state.tapPowerOwned++;state.tapPower++;updateBoneDisplay();renderUpgradesTab();}else alert('Not enough!');}); document.getElementById('maxTapBtn').addEventListener('click',()=>{const m=calculateMaxTapUpgrades();if(m.count>0){state.bones-=m.totalCost;state.tapPowerOwned+=m.count;state.tapPower+=m.count;updateBoneDisplay();renderUpgradesTab();}else alert('Not enough!');}); document.getElementById('upgradeAutoBtn').addEventListener('click',()=>{const p=getAutoCollectorCost();if(state.bones>=p){state.bones-=p;state.autoCollectorOwned++;state.autoCollector++;updateBoneDisplay();renderUpgradesTab();}else alert('Not enough!');}); document.getElementById('maxAutoBtn').addEventListener('click',()=>{const m=calculateMaxAutoUpgrades();if(m.count>0){state.bones-=m.totalCost;state.autoCollectorOwned+=m.count;state.autoCollector+=m.count;updateBoneDisplay();renderUpgradesTab();}else alert('Not enough!');}); }
     function renderPrestigeTab(){ const c=document.getElementById('tabContent');if(!c)return; const nc=getNextPrestigeCost(),mp=calculateMaxPrestiges(),cam=mp.count>0?getPrestigeCost(state.prestigeOwned+mp.count):nc,tm=getTotalMultiplier(),mam=tm+mp.count; c.innerHTML=`<div class="prestige-item"><div class="prestige-info"><span>🌟 Prestige</span><span>Next: ${formatNum(nc)} 🦴</span></div><p class="next-cost">Owned: ${formatNum(state.prestigeOwned)} | Max: ${mp.count} (${formatNum(mp.totalCost)} 🦴)</p><p class="next-cost">Multiplier: x${tm}</p>${mp.count>0?`<p class="cost-breakdown">After max: ${formatNum(state.prestigeOwned+mp.count)} owned | x${mam} | Next: ${formatNum(cam)} 🦴</p>`:''}<div class="prestige-buttons"><button id="maxPrestigeBtn" class="max-buy-btn" ${mp.count===0?'disabled':''}>Max (${mp.count})</button></div>${mp.count===0?`<p style="color:#f44;font-size:0.8rem;margin-top:5px;">Need ${formatNum(nc-state.bones)} more 🦴</p>`:''}</div><p style="color:#ccc;margin-top:10px;">Resets level & upgrades. Keeps multipliers & stats.</p><p style="color:#ffd700;font-size:0.8rem;">+1x multiplier, +1 stats per prestige!</p>`; document.getElementById('maxPrestigeBtn').addEventListener('click',()=>{const m=calculateMaxPrestiges();if(m.count>0){state.bones-=m.totalCost;for(let i=0;i<m.count;i++)performPrestige();updateBoneDisplay();updateExpBar();updatePrestigeUnderTapper();saveCurrentProfile();renderPrestigeTab();alert(`Done! ${m.count} prestiges. x${getTotalMultiplier()}`);}}); }
-    function renderShopTab(){ const c=document.getElementById('tabContent');if(!c)return; let h=`<div style="color:#fff;"><h3 style="color:#ffd700;margin-bottom:5px;">🛒 Shop</h3><div class="polygon-rate">🔷 Real Polygon Payments • Verify on Blockchain</div><p style="color:#ccc;font-size:0.8rem;margin-bottom:10px;">Send POL to the address shown, then paste your transaction hash.</p>`; state.shopTiers.forEach((tier,i)=>{ const pc=state.tierPurchases[tier.id]||0,total=pc*tier.multiplier,bv=i===4,feat=i===2; let cls='shop-tier';if(bv)cls+=' best-value';else if(feat)cls+=' featured'; h+=`<div class="${cls}">${bv?'<div class="best-value-badge">BEST VALUE</div>':(feat?'<div class="tier-badge">POPULAR</div>':'')}<div class="tier-header">T${tier.id}: ${tier.name}</div><div class="tier-multiplier">+x${tier.multiplier}</div><div class="tier-price">£${tier.price.toFixed(2)}</div><div class="tier-polygon-price">🔷 ${gbpToPolygon(tier.price)} POL</div>${pc>0?`<div class="tier-owned-count">📦 ${pc}x | Total: +${total}x</div>`:''}<div class="tier-value">${tier.value}</div><button class="buy-tier-btn" id="buyTier${tier.id}">🔷 Pay with POL</button><div class="payment-options"><button class="payment-btn polygon-btn" id="polygonBtn${tier.id}">🔷 POL</button><button class="payment-btn" id="paypalBtn${tier.id}">💰 PayPal</button></div></div>`; }); h+=`<p style="color:#888;font-size:0.7rem;margin-top:10px;text-align:center;">🔒 Real blockchain verification • Polygon Network</p></div>`; c.innerHTML=h; state.shopTiers.forEach(tier=>{ document.getElementById('polygonBtn'+tier.id)?.addEventListener('click',()=>showPaymentModal(tier.id)); document.getElementById('paypalBtn'+tier.id)?.addEventListener('click',()=>showPaypalModal(tier.id)); document.getElementById('buyTier'+tier.id)?.addEventListener('click',()=>showPaymentModal(tier.id)); }); }
+    function renderShopTab(){ const c=document.getElementById('tabContent');if(!c)return; let h=`<div style="color:#fff;"><h3 style="color:#ffd700;margin-bottom:5px;">🛒 Shop</h3><div class="polygon-rate">🔷 Real Polygon Payments • Auto-Verify on Blockchain</div><p style="color:#ccc;font-size:0.8rem;margin-bottom:10px;">Send POL to the address, paste your transaction hash, and verify!</p>`; state.shopTiers.forEach((tier,i)=>{ const pc=state.tierPurchases[tier.id]||0,total=pc*tier.multiplier,bv=i===4,feat=i===2; let cls='shop-tier';if(bv)cls+=' best-value';else if(feat)cls+=' featured'; h+=`<div class="${cls}">${bv?'<div class="best-value-badge">BEST VALUE</div>':(feat?'<div class="tier-badge">POPULAR</div>':'')}<div class="tier-header">T${tier.id}: ${tier.name}</div><div class="tier-multiplier">+x${tier.multiplier}</div><div class="tier-price">£${tier.price.toFixed(2)}</div><div class="tier-polygon-price">🔷 ${gbpToPolygon(tier.price)} POL</div>${pc>0?`<div class="tier-owned-count">📦 ${pc}x | Total: +${total}x</div>`:''}<div class="tier-value">${tier.value}</div><button class="buy-tier-btn" id="buyTier${tier.id}">🔷 Pay with POL</button><div class="payment-options"><button class="payment-btn polygon-btn" id="polygonBtn${tier.id}">🔷 POL</button><button class="payment-btn" id="paypalBtn${tier.id}">💰 PayPal</button></div></div>`; }); h+=`<p style="color:#888;font-size:0.7rem;margin-top:10px;text-align:center;">🔒 Real blockchain verification • Manual fallback available</p></div>`; c.innerHTML=h; state.shopTiers.forEach(tier=>{ document.getElementById('polygonBtn'+tier.id)?.addEventListener('click',()=>showPaymentModal(tier.id)); document.getElementById('paypalBtn'+tier.id)?.addEventListener('click',()=>showPaypalModal(tier.id)); document.getElementById('buyTier'+tier.id)?.addEventListener('click',()=>showPaymentModal(tier.id)); }); }
 
     const appDiv=document.getElementById('app');
     document.getElementById('importFileInput').addEventListener('change',handleFileImport);
