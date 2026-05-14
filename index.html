@@ -31,9 +31,23 @@
       border: none;
     }
 
+    /* Title banner image */
+    .title-banner {
+      width: 100%;
+      padding: 8px 0;
+      background: #000000;
+      border-bottom: 1px solid #222222;
+    }
+    .title-banner img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+    }
+
     .game-header {
       background: #000000;
-      padding: 14px 18px;
+      padding: 10px 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -43,7 +57,7 @@
       color: #ffffff;
       font-weight: 800;
       letter-spacing: 2px;
-      font-size: 1.4rem;
+      font-size: 1rem;
       text-shadow: 0 2px 4px black;
     }
     .resource-badge {
@@ -53,6 +67,7 @@
       color: #ffd700;
       font-weight: bold;
       border: 1px solid #333333;
+      font-size: 0.9rem;
     }
 
     .screen {
@@ -65,11 +80,21 @@
       display: block;
     }
 
+    /* Centered setup screen */
+    .setup-centered {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
     .breed-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 16px;
       margin-top: 15px;
+      width: 100%;
+      max-width: 400px;
     }
     .breed-card {
       background: #0a0a0a;
@@ -124,6 +149,7 @@
 
     .input-field {
       width: 100%;
+      max-width: 400px;
       padding: 14px;
       border-radius: 30px;
       border: 2px solid #333333;
@@ -142,6 +168,7 @@
       border: none;
       padding: 16px;
       width: 100%;
+      max-width: 400px;
       border-radius: 40px;
       font-weight: bold;
       font-size: 1.2rem;
@@ -156,7 +183,7 @@
       background: transparent;
       width: 200px;
       height: 200px;
-      margin: 20px auto;
+      margin: 20px auto 5px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -185,6 +212,39 @@
       -webkit-touch-callout: none;
       -webkit-user-select: none;
       user-select: none;
+    }
+
+    /* Level and EXP bar */
+    .level-container {
+      margin: 0 auto 16px;
+      max-width: 300px;
+      text-align: center;
+    }
+    .level-display {
+      color: #ffd700;
+      font-weight: bold;
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+      text-align: center;
+    }
+    .exp-bar-bg {
+      background: #111111;
+      height: 12px;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid #333333;
+      margin-bottom: 2px;
+    }
+    .exp-bar-fill {
+      height: 100%;
+      border-radius: 6px;
+      background: linear-gradient(90deg, #ffd700, #ffaa00);
+      transition: width 0.3s ease;
+    }
+    .exp-text {
+      color: #888888;
+      font-size: 0.7rem;
+      text-align: center;
     }
 
     .stat-row {
@@ -292,6 +352,14 @@
       prestigeMultiplier: 1,
       currentTapImage: 0,
       
+      // Level system - visual only, no rewards
+      level: 1,
+      exp: 0,
+      expToNextLevel: 100,
+      
+      // Game title banner image
+      titleBannerUrl: 'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/file_000000006e3c7243adb2fa6d9b40ef21.png',
+      
       // Default tapper images
       defaultTapImages: [
         'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-054556%7E2.png',
@@ -343,11 +411,52 @@
       return state.breedTapImages[state.breed] || state.defaultTapImages;
     }
 
+    // Calculate EXP needed for next level (increases with each level)
+    function getExpForLevel(level) {
+      return Math.floor(100 * Math.pow(1.5, level - 1));
+    }
+
+    // Add EXP and check for level up (no rewards, no notification)
+    function addExp(amount) {
+      state.exp += amount;
+      
+      while (state.exp >= state.expToNextLevel) {
+        state.exp -= state.expToNextLevel;
+        state.level++;
+        state.expToNextLevel = getExpForLevel(state.level);
+        // No rewards, no notification - just pure level progression
+      }
+      
+      updateExpBar();
+    }
+
+    function updateExpBar() {
+      const expFill = document.getElementById('expFill');
+      const expText = document.getElementById('expText');
+      const levelDisplay = document.getElementById('levelDisplay');
+      
+      if (expFill) {
+        const percentage = (state.exp / state.expToNextLevel) * 100;
+        expFill.style.width = percentage + '%';
+      }
+      if (expText) {
+        expText.textContent = `${state.exp} / ${state.expToNextLevel} EXP`;
+      }
+      if (levelDisplay) {
+        levelDisplay.textContent = `⭐ Level ${state.level}`;
+      }
+    }
+
     const appDiv = document.getElementById('app');
 
     function renderSetup() {
       let html = `
-        <div class="screen active" id="setupScreen">
+        <!-- Title Banner - always visible -->
+        <div class="title-banner">
+          <img src="${state.titleBannerUrl}" alt="Paws of Destiny" />
+        </div>
+        
+        <div class="screen active setup-centered" id="setupScreen">
           <h3 style="color:#ffd700; margin-bottom:10px;">🐾 Choose Your Destiny</h3>
           <input class="input-field" id="nameInput" placeholder="Enter your dog's name" value="${state.playerName}" />
           <p style="color:#cccccc; font-weight:bold;">Pick your breed:</p>
@@ -398,6 +507,9 @@
         }
         state.screen = 'main';
         state.currentTapImage = 0;
+        state.level = 1;
+        state.exp = 0;
+        state.expToNextLevel = getExpForLevel(1);
         renderMainGame();
       });
     }
@@ -406,6 +518,11 @@
       const tapImages = getTapImages();
       const currentImage = tapImages[state.currentTapImage];
       let html = `
+        <!-- Title Banner - always visible -->
+        <div class="title-banner">
+          <img src="${state.titleBannerUrl}" alt="Paws of Destiny" />
+        </div>
+        
         <div class="game-header">
           <h2>🐕 ${state.playerName}</h2>
           <div class="resource-badge">🦴 <span id="boneDisplay">${state.bones}</span></div>
@@ -414,6 +531,16 @@
           <div class="tap-area" id="tapDog">
             <img src="${currentImage}" alt="Tap Dog" class="tap-gif" id="tapGif" />
           </div>
+          
+          <!-- Level and EXP Bar -->
+          <div class="level-container">
+            <div class="level-display" id="levelDisplay">⭐ Level ${state.level}</div>
+            <div class="exp-bar-bg">
+              <div class="exp-bar-fill" id="expFill" style="width: ${(state.exp / state.expToNextLevel) * 100}%;"></div>
+            </div>
+            <div class="exp-text" id="expText">${state.exp} / ${state.expToNextLevel} EXP</div>
+          </div>
+          
           <div class="stat-row"><span>${state.breed}</span><span>⭐ Prestige ${state.prestigeCount}</span></div>
           <div class="progress-bg"><div class="progress-fill" id="xpBar" style="width:${Math.min(100, (state.bones%100))}%;"></div></div>
 
@@ -447,8 +574,11 @@
       let earned = state.tapPower * state.prestigeMultiplier;
       state.bones += earned;
       state.totalTaps++;
-      updateBoneDisplay();
       
+      // Add EXP based on tap power
+      addExp(state.tapPower);
+      
+      updateBoneDisplay();
       cycleToNextImage();
       
       if (state.tabActive === 'profile') renderProfileTab();
@@ -465,6 +595,8 @@
       autoInterval = setInterval(() => {
         if (state.autoCollector > 0) {
           state.bones += state.autoCollector * state.prestigeMultiplier;
+          // Auto collector also gives EXP
+          addExp(state.autoCollector);
           updateBoneDisplay();
         }
       }, 1000);
@@ -494,7 +626,8 @@
         <div style="color:#ffffff; padding:10px;">
           <h3 style="color:#ffd700;">🐾 ${state.playerName}</h3>
           <p><strong>Breed:</strong> ${state.breed}</p>
-          <p><strong>Level:</strong> ${state.upgradeLevel} | <strong>Prestige:</strong> ${state.prestigeCount}</p>
+          <p><strong>Level:</strong> ${state.level} | <strong>Prestige:</strong> ${state.prestigeCount}</p>
+          <p>⭐ EXP: ${state.exp} / ${state.expToNextLevel}</p>
           <p>🦴 Bones: ${state.bones}</p>
           <p>⚡ Tap Power: ${state.tapPower} | 🕒 Auto: ${state.autoCollector}/s</p>
         </div>
@@ -555,7 +688,11 @@
           state.autoCollector = 0;
           state.upgradeLevel = 1;
           state.totalTaps = 0;
+          state.level = 1;
+          state.exp = 0;
+          state.expToNextLevel = getExpForLevel(1);
           updateBoneDisplay();
+          updateExpBar();
           renderPrestigeTab();
           alert('Prestige achieved! Multiplier increased.');
         } else alert('You need 500 bones.');
