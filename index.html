@@ -179,6 +179,24 @@
       border-bottom: 4px solid #cc9900;
     }
 
+    .import-btn {
+      background: #444444;
+      border: none;
+      padding: 12px;
+      width: 100%;
+      max-width: 400px;
+      border-radius: 40px;
+      font-weight: bold;
+      font-size: 1rem;
+      color: #ffffff;
+      margin-top: 8px;
+      cursor: pointer;
+      border-bottom: 3px solid #666666;
+    }
+    .import-btn:hover {
+      background: #555555;
+    }
+
     .tap-area {
       background: transparent;
       width: 200px;
@@ -383,10 +401,15 @@
       color: #ffd700;
       margin-top: 4px;
     }
+
+    #importFileInput {
+      display: none;
+    }
   </style>
 </head>
 <body>
 <div class="game-container" id="app"></div>
+<input type="file" id="importFileInput" accept=".txt" />
 
 <script>
   (function() {
@@ -535,25 +558,110 @@
       const profiles = getAllProfiles();
       const profile = profiles[profileId];
       if (profile) {
+        applyProfileData(profile);
         state.currentProfileId = profileId;
-        state.playerName = profile.playerName;
-        state.breed = profile.breed;
-        state.breedStats = profile.breedStats || getBreedStats(profile.breed);
-        state.bones = profile.bones;
-        state.totalTaps = profile.totalTaps;
-        state.prestigeOwned = profile.prestigeOwned || 0;
-        state.tapPowerOwned = profile.tapPowerOwned || 0;
-        state.autoCollectorOwned = profile.autoCollectorOwned || 0;
-        state.tapPower = profile.tapPower || 1;
-        state.autoCollector = profile.autoCollector || 0;
-        state.prestigeMultiplier = profile.prestigeMultiplier || 1;
-        state.currentTapImage = profile.currentTapImage;
-        state.level = profile.level;
-        state.exp = profile.exp;
-        state.expToNextLevel = profile.expToNextLevel;
         return true;
       }
       return false;
+    }
+    
+    function applyProfileData(profile) {
+      state.playerName = profile.playerName || '';
+      state.breed = profile.breed || '';
+      state.breedStats = profile.breedStats || getBreedStats(profile.breed);
+      state.bones = profile.bones || 0;
+      state.totalTaps = profile.totalTaps || 0;
+      state.prestigeOwned = profile.prestigeOwned || 0;
+      state.tapPowerOwned = profile.tapPowerOwned || 0;
+      state.autoCollectorOwned = profile.autoCollectorOwned || 0;
+      state.tapPower = profile.tapPower || 1;
+      state.autoCollector = profile.autoCollector || 0;
+      state.prestigeMultiplier = profile.prestigeMultiplier || 1;
+      state.currentTapImage = profile.currentTapImage || 0;
+      state.level = profile.level || 1;
+      state.exp = profile.exp || 0;
+      state.expToNextLevel = profile.expToNextLevel || 100;
+    }
+    
+    // ============ IMPORT/EXPORT SYSTEM ============
+    
+    function exportSaveFile() {
+      const saveData = {
+        playerName: state.playerName,
+        breed: state.breed,
+        breedStats: state.breedStats,
+        bones: state.bones,
+        totalTaps: state.totalTaps,
+        prestigeOwned: state.prestigeOwned,
+        tapPowerOwned: state.tapPowerOwned,
+        autoCollectorOwned: state.autoCollectorOwned,
+        tapPower: state.tapPower,
+        autoCollector: state.autoCollector,
+        prestigeMultiplier: state.prestigeMultiplier,
+        currentTapImage: state.currentTapImage,
+        level: state.level,
+        exp: state.exp,
+        expToNextLevel: state.expToNextLevel,
+        timestamp: new Date().toISOString()
+      };
+      
+      const saveText = JSON.stringify(saveData, null, 2);
+      const blob = new Blob([saveText], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `paws_of_destiny_${state.playerName}_${new Date().toISOString().slice(0,10)}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+    
+    function importSaveFile() {
+      const fileInput = document.getElementById('importFileInput');
+      fileInput.click();
+    }
+    
+    function handleFileImport(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const saveData = JSON.parse(e.target.result);
+          
+          // Validate save data
+          if (!saveData.playerName || !saveData.breed) {
+            alert('Invalid save file! Missing required data.');
+            return;
+          }
+          
+          // Create new profile from imported data
+          const profileId = 'profile_' + Date.now();
+          state.currentProfileId = profileId;
+          applyProfileData(saveData);
+          
+          // Save to localStorage
+          saveCurrentProfile();
+          
+          // Load the game
+          state.screen = 'main';
+          renderMainGame();
+          
+          alert(`Save imported successfully! Welcome back, ${state.playerName}!`);
+        } catch (error) {
+          alert('Failed to parse save file! Make sure it\'s a valid Paws of Destiny save file.');
+        }
+      };
+      reader.readAsText(file);
+      
+      // Reset file input so the same file can be imported again
+      event.target.value = '';
+    }
+    
+    function downloadSaveFile() {
+      exportSaveFile();
     }
     
     function logout() {
@@ -568,34 +676,6 @@
       delete profiles[profileId];
       saveProfiles(profiles);
       renderLoginScreen();
-    }
-    
-    function downloadSaveFile() {
-      const saveData = {
-        profileId: state.currentProfileId,
-        playerName: state.playerName,
-        breed: state.breed,
-        breedStats: state.breedStats,
-        bones: state.bones,
-        prestigeOwned: state.prestigeOwned,
-        level: state.level,
-        exp: state.exp,
-        tapPower: state.tapPower,
-        tapPowerOwned: state.tapPowerOwned,
-        autoCollector: state.autoCollector,
-        autoCollectorOwned: state.autoCollectorOwned,
-        prestigeMultiplier: state.prestigeMultiplier,
-        timestamp: new Date().toISOString()
-      };
-      const blob = new Blob([JSON.stringify(saveData, null, 2)], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `paws_of_destiny_${state.playerName}_${new Date().toISOString().slice(0,10)}.txt`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
     }
 
     // ============ STAT CALCULATIONS ============
@@ -751,7 +831,7 @@
         </div>
         <div class="screen active setup-centered" id="loginScreen">
           <h3 style="color:#ffd700; margin-bottom:15px;">🐾 Paws of Destiny</h3>
-          <p style="color:#cccccc; margin-bottom:20px;">Welcome back! Select your profile or create a new one.</p>
+          <p style="color:#cccccc; margin-bottom:20px;">Welcome back! Select your profile, import a save, or create a new one.</p>
       `;
       
       if (profileIds.length > 0) {
@@ -769,11 +849,12 @@
         });
         html += `</div>`;
       } else {
-        html += `<p style="color:#888888; margin:20px 0;">No profiles found. Create your first one!</p>`;
+        html += `<p style="color:#888888; margin:20px 0;">No profiles found. Create your first one or import a save!</p>`;
       }
       
       html += `
           <button class="start-btn" id="newProfileBtn" style="margin-top:20px;">✨ New Profile</button>
+          <button class="import-btn" id="importSaveBtn">📥 Import Save File (.txt)</button>
         </div>
       `;
       
@@ -819,6 +900,8 @@
         state.expToNextLevel = getExpForLevel(1);
         renderSetup();
       });
+      
+      document.getElementById('importSaveBtn').addEventListener('click', importSaveFile);
     }
     
     function renderSetup() {
@@ -1023,7 +1106,7 @@
           <p style="color:#ffd700; font-size:0.8rem;">Each prestige gives +1x earnings & XP boost!</p>
           <button id="downloadSaveBtn" style="margin-top:10px; width:100%;">💾 Download Save File (.txt)</button>
           <button id="logoutBtn" class="logout-btn" style="margin-top:8px; width:100%;">🚪 Logout (Save & Exit)</button>
-          <p style="color:#888888; font-size:0.7rem; margin-top:5px;">Save manually before leaving</p>
+          <p style="color:#888888; font-size:0.7rem; margin-top:5px;">Export your save to play anywhere!</p>
         </div>
       `;
       document.getElementById('downloadSaveBtn').addEventListener('click', downloadSaveFile);
@@ -1188,6 +1271,9 @@
     }
 
     const appDiv = document.getElementById('app');
+    
+    // Set up file import listener
+    document.getElementById('importFileInput').addEventListener('change', handleFileImport);
     
     // Start the app
     renderLoginScreen();
