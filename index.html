@@ -211,7 +211,7 @@
       -webkit-user-select: none;
       outline: none;
     }
-    .tap-area.akita-tapper {
+    .tap-area.akita-tapper, .tap-area.chihuahua-tapper {
       width: 220px;
       height: 220px;
     }
@@ -219,11 +219,11 @@
     .tap-gif {
       width: 100%;
       height: 100%;
-      object-fit: contain;
+      object-fit: cover;
       border-radius: 0;
       pointer-events: none;
     }
-    .tap-gif.akita-gif {
+    .tap-gif.akita-gif, .tap-gif.chihuahua-gif {
       object-fit: contain;
       padding: 10px;
     }
@@ -350,6 +350,13 @@
           'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-144013%7E2.png',
           'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-144027%7E2.png',
           'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-143958%7E2.png'
+        ],
+        'Chihuahua': [
+          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/file_000000003b64720a9b36250101dcd849%7E8.png',
+          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/file_000000003b64720a9b36250101dcd849%7E7.png',
+          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/file_000000003b64720a9b36250101dcd849%7E6.png',
+          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/file_000000003b64720a9b36250101dcd849%7E5.png',
+          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/file_000000003b64720a9b36250101dcd849%7E4.png'
         ]
       },
       breedImages: {
@@ -358,7 +365,8 @@
         'American PitBull': { url: 'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-110631%7E2.png', position: 'center 35%' },
         'American Bulldog': { url: 'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-115556%7E3.png', position: 'center 35%' },
         'Cane Corso': { url: 'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/file_0000000001907246b79913b041113f34%7E2.png', position: 'center 35%' },
-        'Japanese Akita': { url: 'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/file_00000000340c71f4b8e56955c28fa581.png', position: 'center 35%' }
+        'Japanese Akita': { url: 'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/file_00000000340c71f4b8e56955c28fa581.png', position: 'center 35%' },
+        'Chihuahua': { url: 'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/file_000000009f9071f4aff9ecca89a24b9b.png', position: 'center 35%' }
       },
       breedOptions: [
         'Staffordshire Bull Terrier', 'American PitBull', 'American Bulldog',
@@ -562,9 +570,9 @@
 
     function renderMainGame() {
       const imgs=getTapImages(),cur=imgs[Math.min(state.currentTapImage, imgs.length-1)],tm=getTotalMultiplier();
-      const isAkita = state.breed === 'Japanese Akita';
-      const tapperClass = isAkita ? 'tap-area akita-tapper' : 'tap-area';
-      const gifClass = isAkita ? 'tap-gif akita-gif' : 'tap-gif';
+      const isSmallBreed = state.breed === 'Japanese Akita' || state.breed === 'Chihuahua';
+      const tapperClass = isSmallBreed ? 'tap-area ' + (state.breed === 'Japanese Akita' ? 'akita-tapper' : 'chihuahua-tapper') : 'tap-area';
+      const gifClass = isSmallBreed ? 'tap-gif ' + (state.breed === 'Japanese Akita' ? 'akita-gif' : 'chihuahua-gif') : 'tap-gif';
       let h=`<div class="title-banner"><img src="${state.titleBannerUrl}" alt="Paws of Destiny"/></div><div class="game-header"><h2>🐕 ${state.playerName}</h2><div class="resource-badge">🦴 <span id="boneDisplay">${formatNum(state.bones)}</span></div></div><div class="screen active" id="mainScreen"><div class="${tapperClass}" id="tapDog"><img src="${cur}" alt="Tap" class="${gifClass}" id="tapGif"/></div><div class="level-container"><div class="level-display" id="levelDisplay">⭐ Level ${formatNum(state.level)}</div><div class="exp-bar-bg"><div class="exp-bar-fill" id="expFill" style="width:${(state.exp/state.expToNextLevel)*100}%;"></div></div><div class="exp-text" id="expText">${formatNum(state.exp)} / ${formatNum(state.expToNextLevel)} EXP (x${tm})</div></div><div class="prestige-under-tapper" id="prestigeUnderTapper">⭐ Prestige ${formatNum(state.prestigeOwned)} owned</div><div class="stat-row"><span>${state.breed}</span></div><div class="tab-row"><div class="tab active" data-tab="profile">🐶 Profile</div><div class="tab" data-tab="upgrades">📈 Upgrades</div><div class="tab" data-tab="prestige">🌟 Prestige</div><div class="tab" data-tab="shop">🛒 Shop</div></div><div id="tabContent"></div></div>`;
       appDiv.innerHTML=h;
       document.getElementById('tapDog').addEventListener('click',handleTap);
