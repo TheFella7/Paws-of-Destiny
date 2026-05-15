@@ -346,7 +346,7 @@
     function showNotEnoughBones(shortfall, cost, upgradeName) { showGameNotification('🦴 Not Enough Bones!', `You need ${formatNum(cost)} bones for ${upgradeName}.\nYou're short by ${formatNum(shortfall)} bones.\n\nKeep tapping to earn more!`); }
     function showNotEnoughForAny(upgradeName) { showGameNotification('🦴 Not Enough Bones!', `You don't have enough bones for any ${upgradeName} upgrade.\n\nKeep tapping to earn more!`); }
 
-    // ============ LIVE PRICE FETCHER (runs continuously) ============
+    // ============ LIVE PRICE FETCHER ============
     async function fetchLivePolygonRate() { try { const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=polygon-ecosystem-token&vs_currencies=gbp', { headers: { 'Accept': 'application/json' } }); if (response.ok) { const data = await response.json(); if (data['polygon-ecosystem-token']?.gbp) { LIVE_POL_RATE_GBP = data['polygon-ecosystem-token'].gbp; lastRateUpdate = new Date(); return true; } } const binanceResponse = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=POLGBP', { headers: { 'Accept': 'application/json' } }); if (binanceResponse.ok) { const binanceData = await binanceResponse.json(); if (binanceData.price) { LIVE_POL_RATE_GBP = parseFloat(binanceData.price); lastRateUpdate = new Date(); return true; } } } catch (error) {} return false; }
     function gbpToPolygon(gbp) { if (LIVE_POL_RATE_GBP <= 0) return '0.00'; return (gbp / LIVE_POL_RATE_GBP).toFixed(2); }
     function getRateDisplayText() { if (lastRateUpdate) { const secondsAgo = Math.floor((new Date() - lastRateUpdate) / 1000); if (secondsAgo < 60) return `Live • Updated ${secondsAgo}s ago`; if (secondsAgo < 3600) return `Live • Updated ${Math.floor(secondsAgo/60)}m ago`; return `Live • Updated ${Math.floor(secondsAgo/3600)}h ago`; } return 'Using cached rate'; }
@@ -374,7 +374,14 @@
         'American Bulldog': ['Screenshot_20260514-115657~3.png','Screenshot_20260514-115959~2.png','Screenshot_20260514-120214~2.png','Screenshot_20260514-120228~2.png','Screenshot_20260514-120237~2.png','Screenshot_20260514-120350~2.png'].map(f=>'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/'+f),
         'Cane Corso': ['Screenshot_20260514-134601~2.png','Screenshot_20260514-134617~2.png','Screenshot_20260514-134621~2.png','Screenshot_20260514-134730~2.png','Screenshot_20260514-134740~2.png','Screenshot_20260514-134753~2.png'].map(f=>'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/'+f),
         'Japanese Akita': ['Screenshot_20260514-144213~3.png','Screenshot_20260514-144154~2.png','Screenshot_20260514-144013~2.png','Screenshot_20260514-144027~2.png','Screenshot_20260514-143958~2.png'].map(f=>'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/'+f),
-        'Chihuahua': ['file_000000003b64720a9b36250101dcd849~8.png','file_000000003b64720a9b36250101dcd849~7.png','file_000000003b64720a9b36250101dcd849~6.png','file_000000003b64720a9b36250101dcd849~5.png','file_000000003b64720a9b36250101dcd849~4.png'].map(f=>'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/'+f)
+        'Chihuahua': ['file_000000003b64720a9b36250101dcd849~8.png','file_000000003b64720a9b36250101dcd849~7.png','file_000000003b64720a9b36250101dcd849~6.png','file_000000003b64720a9b36250101dcd849~5.png','file_000000003b64720a9b36250101dcd849~4.png'].map(f=>'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/'+f),
+        'Doberman': [
+          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/file_00000000e81c71f4a57cd056747a9e04%7E2.png',
+          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/file_00000000e81c71f4a57cd056747a9e04%7E3.png',
+          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/file_00000000e81c71f4a57cd056747a9e04%7E4.png',
+          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/file_00000000e81c71f4a57cd056747a9e04%7E5.png',
+          'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/file_00000000e81c71f4a57cd056747a9e04%7E6.png'
+        ]
       },
       breedImages: {
         'Staffordshire Bull Terrier': { url: 'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-062136%7E2.png', position: 'center 35%' },
@@ -383,7 +390,8 @@
         'American Bulldog': { url: 'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/Screenshot_20260514-115556%7E3.png', position: 'center 35%' },
         'Cane Corso': { url: 'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/file_0000000001907246b79913b041113f34%7E2.png', position: 'center 35%' },
         'Japanese Akita': { url: 'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/file_00000000340c71f4b8e56955c28fa581.png', position: 'center 35%' },
-        'Chihuahua': { url: 'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/file_000000009f9071f4aff9ecca89a24b9b.png', position: 'center 35%' }
+        'Chihuahua': { url: 'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/file_000000009f9071f4aff9ecca89a24b9b.png', position: 'center 35%' },
+        'Doberman': { url: 'https://raw.githubusercontent.com/TheFella7/Paws-of-Destiny/refs/heads/main/images/file_00000000ba1871f4a9e78cbe993098f7%7E2.png', position: 'center 35%' }
       },
       breedOptions: ['Staffordshire Bull Terrier','American PitBull','American Bulldog','XL Bully','Cane Corso','Japanese Akita','Doberman','Husky','Chihuahua','Jack Russell','Shih Tzu','German Shepherd'],
       shopTiers: [
@@ -396,42 +404,9 @@
     };
     state.tierPurchases = {}; state.shopTiers.forEach(tier => { state.tierPurchases[tier.id] = 0; });
 
-    // ============ AUTO-SAVE SYSTEM (every 5 seconds) ============
-    function autoSave() {
-      if (state.screen === 'main' && state.currentProfileId) {
-        saveCurrentProfile();
-        const indicator = document.getElementById('autoSaveIndicator');
-        if (indicator) {
-          indicator.classList.add('show');
-          setTimeout(() => indicator.classList.remove('show'), 1500);
-        }
-      }
-    }
-    
-    // Auto-load on startup from localStorage
-    function autoLoadLatestProfile() {
-      const profiles = getAllProfiles();
-      const profileIds = Object.keys(profiles);
-      if (profileIds.length > 0) {
-        // Find the most recently saved profile
-        let latestProfile = null;
-        let latestTime = 0;
-        profileIds.forEach(id => {
-          const profile = profiles[id];
-          const saveTime = profile.lastSaved ? new Date(profile.lastSaved).getTime() : 0;
-          if (saveTime > latestTime) {
-            latestTime = saveTime;
-            latestProfile = id;
-          }
-        });
-        if (latestProfile) {
-          loadProfile(latestProfile);
-          state.screen = 'main';
-          return true;
-        }
-      }
-      return false;
-    }
+    // ============ AUTO-SAVE SYSTEM ============
+    function autoSave() { if (state.screen === 'main' && state.currentProfileId) { saveCurrentProfile(); const indicator = document.getElementById('autoSaveIndicator'); if (indicator) { indicator.classList.add('show'); setTimeout(() => indicator.classList.remove('show'), 1500); } } }
+    function autoLoadLatestProfile() { const profiles = getAllProfiles(); const profileIds = Object.keys(profiles); if (profileIds.length > 0) { let latestProfile = null; let latestTime = 0; profileIds.forEach(id => { const profile = profiles[id]; const saveTime = profile.lastSaved ? new Date(profile.lastSaved).getTime() : 0; if (saveTime > latestTime) { latestTime = saveTime; latestProfile = id; } }); if (latestProfile) { loadProfile(latestProfile); state.screen = 'main'; return true; } } return false; }
 
     // ============ SAVE SYSTEM ============
     function getAllProfiles() { const p = localStorage.getItem('pawsOfDestiny_profiles'); return p ? JSON.parse(p) : {}; }
@@ -490,18 +465,8 @@
 
     const appDiv=document.getElementById('app');
     document.getElementById('importFileInput').addEventListener('change',handleFileImport);
-    
-    // ============ STARTUP: Auto-load or show login ============
-    if (!autoLoadLatestProfile()) {
-      renderLoginScreen();
-    } else {
-      renderMainGame();
-    }
-    
-    // ============ AUTO-SAVE EVERY 5 SECONDS ============
+    if (!autoLoadLatestProfile()) { renderLoginScreen(); } else { renderMainGame(); }
     setInterval(autoSave, 5000);
-    
-    // ============ LIVE RATE UPDATES EVERY 60 SECONDS ============
     fetchLivePolygonRate().then(() => { console.log('Initial POL rate: £' + LIVE_POL_RATE_GBP); });
     setInterval(() => { fetchLivePolygonRate(); }, 60000);
   })();
